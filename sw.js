@@ -1,10 +1,12 @@
-const CACHE = "flshd-v10";
+const CACHE = "flshd-v11";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./manifest.webmanifest",
   "./src/app.js",
+  "./src/cloud.js",
+  "./src/supabase-config.js",
   "./src/data.js",
   "./src/db.js",
   "./src/srs.js",
@@ -29,18 +31,33 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))
+      .then(keys => Promise.all(keys.filter(key => key.startsWith("flshd-") && key !== CACHE).map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
 
+// Only cache public static application assets and the public SDK.
+// Never cache Supabase auth, API, image, or other private responses.
+const STATIC_URLS = new Set(ASSETS.map(path => new URL(path,self.location.href).href));
+const SDK_URL = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
 self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") return;
-  event.respondWith(
-    caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-      const copy = response.clone();
-      caches.open(CACHE).then(cache => cache.put(event.request, copy));
+  const request=event.request;
+  if(request.method!=="GET")return;
+  const url=new URL(request.url);
+  if(url.href!==SDK_URL && !STATIC_URLS.has(url.href))return;
+  if(request.headers.has("Authorization") || request.headers.has("apikey"))return;
+  event.respondWith((async()=>{
+    const cache=await caches.open(CACHE);
+    try{
+      const response=await fetch(request);
+      if(response.ok || (url.href===SDK_URL && response.type==="opaque")) {
+        try{await cache.put(request,response.clone());}catch{}
+      }
       return response;
-    }))
-  );
+    }catch(error){
+      const fallback=await cache.match(request);
+      if(fallback)return fallback;
+      throw error;
+    }
+  })());
 });
