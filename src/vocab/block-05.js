@@ -15,11 +15,11 @@ a1-computer|act-25|Computer|ordenador|der|–|Wann bekommst du deinen neuen Comp
 a1-drucken|act-25|drucken|imprimir|||Bitte drucke das Formular für mich.|📚
 a1-drucker|act-25|Drucker|impresora|der|–|Mein Drucker ist kaputt.|📚
 a1-drucken-165|act-25|drücken|pulsar / apretar|||Drück hier, dann geht der Computer an.|📚
-a1-ergebnis|act-25|Ergebnis|resultado|das|-se|Das Ergebnis des Tests bekommen Sie in zwei Wochen.|📚
-a1-erklaren|act-25|erklären|explicar|||Kannst du mir das erklären?|📚
-a1-fehler|act-25|Fehler|error|der|–|Diesen Fehler mache ich immer.|📚
-a1-formular|act-25|Formular|formulario|das|-e|Sie müssen dieses Formular ausfüllen.|📚
-a1-fragen|act-25|fragen|preguntar|||Er möchte Sie etwas fragen. Wann kommen Sie?|📚
+a1-ergebnis|act-26|Ergebnis|resultado|das|-se|Das Ergebnis des Tests bekommen Sie in zwei Wochen.|📚
+a1-erklaren|act-26|erklären|explicar|||Kannst du mir das erklären?|📚
+a1-fehler|act-26|Fehler|error|der|–|Diesen Fehler mache ich immer.|📚
+a1-formular|act-26|Formular|formulario|das|-e|Sie müssen dieses Formular ausfüllen.|📚
+a1-fragen|act-26|fragen|preguntar|||Er möchte Sie etwas fragen. Wann kommen Sie?|📚
 a1-frage|act-26|Frage|pregunta|die|-n|Ich habe eine Frage.|📚
 a1-gruppe|act-26|Gruppe|grupo|die|-n|Die erste Gruppe beginnt um 16 Uhr.|📚
 a1-hausaufgabe|act-26|Hausaufgabe|deberes|die|-n|Kannst du mir bei den Hausaufgaben helfen?|📚
@@ -32,22 +32,23 @@ a1-lesen|act-26|lesen|leer|||Ich lese ein Buch von García Márquez.|📚
 a1-losung|act-26|Lösung|solución|die|-en|Die Lösung ist ganz einfach.|📚
 a1-papier|act-26|Papier|papel|das||Hier sind Papier und Bleistift.|📚
 a1-prufung|act-26|Prüfung|examen|die||Die Prüfung ist am Montag um 8.00 Uhr.|📚
-a1-satz|act-26|Satz|frase / oración||-ä, e|Dieser Satz ist sehr einfach.|📚
-a1-schule|act-26|Schule|escuela|die||Meine Tochter geht schon in die Schule. Die Schule ist gleich hier um die Ecke.|📚
-a1-schuler|act-26|Schüler|alumno|der|–|In meinem Kurs sind acht Schülerinnen und fünf Schüler.|📚
-a1-sprache|act-26|Sprache|idioma / lengua|die|-n|Welche Sprachen sprichst du?|📚
-a1-studieren|act-26|studieren|estudiar en la universidad|||Ich studiere in Mainz.|📚
-a1-studium|act-26|Studium|estudios universitarios|das||Das Studium beginnt im Oktober.|📚
-a1-student|act-26|Student|estudiante universitario|der|-en|Ich bin Studentin.|📚
-a1-suchen|act-26|suchen|buscar|||Suchst du etwas?|📚
-a1-test|act-26|Test|prueba / test|der||Der Test war einfach.|📚
-a1-text|act-26|Text|texto|der|-e|Lesen Sie bitte diesen Text.|📚
+a1-satz|act-27|Satz|frase / oración||-ä, e|Dieser Satz ist sehr einfach.|📚
+a1-schule|act-27|Schule|escuela|die||Meine Tochter geht schon in die Schule. Die Schule ist gleich hier um die Ecke.|📚
+a1-schuler|act-27|Schüler|alumno|der|–|In meinem Kurs sind acht Schülerinnen und fünf Schüler.|📚
+a1-sprache|act-27|Sprache|idioma / lengua|die|-n|Welche Sprachen sprichst du?|📚
+a1-studieren|act-27|studieren|estudiar en la universidad|||Ich studiere in Mainz.|📚
+a1-studium|act-27|Studium|estudios universitarios|das||Das Studium beginnt im Oktober.|📚
+a1-student|act-27|Student|estudiante universitario|der|-en|Ich bin Studentin.|📚
+a1-suchen|act-27|suchen|buscar|||Suchst du etwas?|📚
+a1-test|act-27|Test|prueba / test|der||Der Test war einfach.|📚
+a1-text|act-27|Text|texto|der|-e|Lesen Sie bitte diesen Text.|📚
 a1-thema|act-27|Thema|tema|das||Wir sprechen heute über das Thema „Essen und Trinken“.|📚
 a1-unterricht|act-27|Unterricht|clase / enseñanza|der||Wir haben Unterricht von 8.00 bis 12.00 Uhr.|📚
 a1-unterschreiben|act-27|unterschreiben|firmar|||Wo muss ich unterschreiben?|📚
 a1-verstehen|act-27|verstehen|entender|||Können Sie mich verstehen?|📚
 a1-wiederholen|act-27|wiederholen|repetir|||Können Sie das bitte wiederholen?|📚
 a1-wort|act-27|Wort|palabra|das|-ö, er/-e|Ich kenne das Wort nicht.|📚
+a1-schreiben|act-27|schreiben|escribir|||Er schreibt jeden Tag fünfzig E-Mails.|📚
 a1-arbeiten|act-28|arbeiten|trabajar|||Wo arbeiten Sie?|💼
 a1-arbeit|act-28|Arbeit|trabajo|die|-en|Mein Bruder sucht Arbeit.|💼
 a1-arbeitsplatz|act-28|Arbeitsplatz|puesto de trabajo|der|-ä, e|An meinem Arbeitsplatz fehlt ein Drucker.|💼
@@ -62,6 +63,7 @@ a1-verdienen|act-28|verdienen|ganar (dinero)|||Ich verdiene 1.500 Euro im Monat.
 a1-verkaufen|act-28|verkaufen|vender|||Er verkauft sein altes Auto.|💼
 a1-verkaufer|act-28|Verkäufer|vendedor|der|–|Meine Mutter ist Verkäuferin im Kaufhaus.|💼
 a1-vermieter|act-28|Vermieter|casero / arrendador|der||Unser Vermieter heißt Huber. Er wohnt auch hier.|💼
+a1-stelle|act-28|Stelle|puesto / empleo|die|-n|Ich habe eine neue Stelle.|💼
 a1-arm|act-29|Arm|brazo|der|-e|Mein Arm tut weh.|🩺
 a1-arzt|act-29|Arzt|médico|der|-Ä, e|Morgen habe ich einen Termin bei meiner Ärztin.|🩺
 a1-auge|act-29|Auge|ojo|das|-n|Er hat blaue Augen.|🩺
@@ -88,15 +90,4 @@ a1-erzahlen|act-30|erzählen|contar / narrar|||Wir müssen euch etwas erzählen!
 a1-sich-freuen|act-30|(sich) freuen|alegrarse|||Ich freue mich auf den Urlaub.|💬
 a1-geben|act-30|geben|dar|||Kannst du mir bitte deinen Kugelschreiber geben? Es gibt keine Karten mehr.|💬
 a1-gefallen|act-30|gefallen|gustar|||Das gefällt mir.|💬
-a1-gratulieren|act-30|gratulieren|felicitar|||Ich gratuliere dir!|💬
-a1-heien|act-30|heißen|llamarse / significar|||Ich heiße Charlotte Meier. Wie heißt das auf Deutsch?|💬
-a1-helfen|act-30|helfen|ayudar|||Können Sie mir helfen, bitte?|💬
-a1-kennen|act-30|kennen|conocer|||Kennen Sie diese Frau? – Nein, leider nicht.|💬
-a1-kennenlernen|act-30|kennenlernen|conocer por primera vez|||Wir sind neu hier. Wir möchten Sie kennenlernen.|💬
-a1-lachen|act-30|lachen|reír|||Die Kinder lachen viel.|💬
-a1-lieben|act-30|lieben|amar|||Ich liebe dich!|💬
-a1-sagen|act-30|sagen|decir|||Sag mal, wie geht es dir denn?|💬
-a1-schicken|act-30|schicken|enviar|||Bitte schicken Sie mir eine E-Mail.|💬
-a1-sprechen|act-30|sprechen|hablar|||Kann ich (mit) Herrn Klein sprechen?|💬
-a1-schreiben|act-27|schreiben|escribir|||Er schreibt jeden Tag fünfzig E-Mails.|📚
-a1-stelle|act-28|Stelle|puesto / empleo|die|-n|Ich habe eine neue Stelle.|💼`;
+a1-gratulieren|act-30|gratulieren|felicitar|||Ich gratuliere dir!|💬`;
