@@ -430,16 +430,14 @@ function renderLearningSession() {
 
   if (session.phase === "complete") {
     return `
-      <section class="page-head">
-        <button class="back-btn" id="backHome">←</button>
-        <div><h1>${theme.icon} ${escapeHTML(theme.name)}</h1><p>Tema completado</p></div>
+      <section class="activity-screen activity-complete">
+        <div class="celebrate">
+          <div class="emoji">🏆</div>
+          <h2>¡Tema dominado!</h2>
+          <p>Estas palabras ya han entrado en tu sistema de repetición. La primera revisión aparecerá dentro de 3 días.</p>
+          <button class="btn primary" id="finishTopic">Volver al camino</button>
+        </div>
       </section>
-      <div class="celebrate">
-        <div class="emoji">🏆</div>
-        <h2>¡Tema dominado!</h2>
-        <p>Estas palabras ya han entrado en tu sistema de repetición. La primera revisión aparecerá dentro de 3 días.</p>
-        <button class="btn primary" id="finishTopic">Volver al camino</button>
-      </div>
     `;
   }
 
@@ -452,17 +450,20 @@ function renderLearningSession() {
   if (session.phase === "typing") body = renderTypingQuestion(word);
 
   return `
-    <section class="page-head">
-      <button class="back-btn" id="leaveSession">←</button>
-      <div><h1>${theme.icon} ${escapeHTML(theme.name)}</h1><p>Ciclo ${session.cycle} · Aprende las palabras sin errores consecutivos.</p></div>
+    <section class="activity-screen">
+      <header class="activity-header">
+        <button class="back-btn" id="leaveSession">←</button>
+        <div class="activity-title"><b>${theme.icon} ${escapeHTML(theme.name)}</b><small>Ciclo ${session.cycle}</small></div>
+        <span class="activity-count">${count}</span>
+      </header>
+      ${stageMarkup(session.phase)}
+      <div class="session-progress"><div style="width:${sessionProgressPercent()}%"></div></div>
+      <main class="activity-main">
+        ${body}
+      </main>
     </section>
-    ${stageMarkup(session.phase)}
-    <div class="session-progress"><div style="width:${sessionProgressPercent()}%"></div></div>
-    <div class="session-count">${count}</div>
-    ${body}
   `;
 }
-
 function renderFlashcard(word) {
   const revealed = state.session.revealed;
 
@@ -493,70 +494,107 @@ function renderFlashcard(word) {
 }
 
 function optionCandidates(word) {
-  const pool = topicWords(word.themeId).filter(candidate => candidate.id !== word.id);
+  const sameTheme = topicWords(word.themeId).filter(candidate => candidate.id !== word.id);
+  const widerPool = WORDS.filter(candidate => candidate.id !== word.id && candidate.themeId !== word.themeId);
+  const pool = sameTheme.length >= 3 ? sameTheme : [...sameTheme, ...widerPool];
   const shuffled = [...pool].sort(() => Math.random() - .5).slice(0, 3);
   return [word, ...shuffled].sort(() => Math.random() - .5);
 }
 
-function renderChoiceQuestion(word) {
+function prepareChoiceQuestion(word) {
   const session = state.session;
-  if (!session.options || session.optionWordId !== word.id) {
-    session.options = optionCandidates(word).map(option => option.id);
-    session.optionWordId = word.id;
-    session.questionKind = session.index % 2 === 0 ? "translation" : "image";
+  if (session.optionWordId === word.id && session.options?.length) return;
+
+  const kinds = ["translation", "image", "reverse", "article"];
+  let kind = kinds[(session.index + (session.cycle || 0)) % kinds.length];
+  if (kind === "article" && !word.article) kind = "reverse";
+
+  session.optionWordId = word.id;
+  session.questionKind = kind;
+
+  if (kind === "article") {
+    session.options = [
+      { value: "article:der", label: "der" },
+      { value: "article:die", label: "die" },
+      { value: "article:das", label: "das" },
+      { value: "article:none", label: "sin artículo" }
+    ];
+    session.correctChoice = `article:${word.article || "none"}`;
+    return;
   }
 
-  const options = session.options.map(wordById);
-  const photoQuestion = session.questionKind === "image";
+  const candidates = optionCandidates(word);
+  session.options = candidates.map(candidate => ({
+    value: candidate.id,
+    label: kind === "reverse" ? candidate.spanish : candidate.german
+  }));
+  session.correctChoice = word.id;
+}
+function renderChoiceQuestion(word) {
+  const session = state.session;
+  prepareChoiceQuestion(word);
+
+  const kind = session.questionKind;
+  const question = kind === "image"
+    ? "¿Cómo se llama esto en alemán?"
+    : kind === "reverse"
+      ? "¿Qué significa esta palabra?"
+      : kind === "article"
+        ? "¿Qué artículo lleva esta palabra?"
+        : "¿Cuál es la palabra alemana?";
+
+  let prompt = "";
+  if (kind === "image") {
+    prompt = imageMarkup(word, "question-photo");
+  } else if (kind === "reverse") {
+    prompt = `<div class="prompt">${escapeHTML(word.german)}</div>`;
+  } else if (kind === "article") {
+    prompt = `<div class="prompt">${escapeHTML(word.german)}</div><p class="small muted">Elige der, die, das o “sin artículo”.</p>`;
+  } else {
+    prompt = `<div class="prompt">${escapeHTML(word.spanish)}</div>`;
+  }
 
   return `
-    <section class="question-card">
-      <h2>${photoQuestion ? "¿Cómo se llama esto en alemán?" : "¿Cuál es la palabra alemana?"}</h2>
-      ${photoQuestion ? imageMarkup(word, "question-photo") : `<div class="prompt">${escapeHTML(word.spanish)}</div>`}
-      ${photoQuestion && !state.images.has(word.id) ? '<p class="small muted">Aún no has subido foto: usamos el icono como apoyo.</p>' : ""}
+    <section class="question-card compact-question">
+      <h2>${question}</h2>
+      ${prompt}
+      ${kind === "image" && !state.images.has(word.id) ? '<p class="small muted">Aún no has subido foto: usamos el icono como apoyo.</p>' : ""}
     </section>
 
     <div class="options-grid">
-      ${options.map(option => {
+      ${session.options.map(option => {
         let cls = "";
-        if (session.answered && option.id === word.id) cls = "correct";
-        if (session.answered && option.id === session.selected && option.id !== word.id) cls = "wrong";
+        if (session.answered && option.value === session.correctChoice) cls = "correct";
+        if (session.answered && option.value === session.selected && option.value !== session.correctChoice) cls = "wrong";
         return `
-          <button class="option ${cls}" data-option="${option.id}" ${session.answered ? "disabled" : ""}>
-            ${escapeHTML(option.german)}
+          <button class="option ${cls}" data-option="${escapeHTML(option.value)}" ${session.answered ? "disabled" : ""}>
+            ${escapeHTML(option.label)}
           </button>
         `;
       }).join("")}
     </div>
 
-    ${session.feedback ? `<div class="feedback">${session.feedback}</div>
-      <div class="action-row"><button class="btn primary" id="continueQuestion">Continuar</button></div>` : ""}
+    ${feedbackDock("continueQuestion")}
   `;
 }
-
 function renderTypingQuestion(word) {
   const session = state.session;
 
   return `
-    <section class="question-card">
+    <section class="question-card compact-question">
       <h2>Escribe la palabra alemana</h2>
       ${imageMarkup(word, "question-photo")}
       <p class="translation">${escapeHTML(word.spanish)}</p>
       <input id="typingAnswer" class="answer-input" type="text" autocomplete="off" autocapitalize="off"
         spellcheck="false" placeholder="Escribe en alemán…" ${session.answered ? "disabled" : ""}>
-      <p class="small muted">No distinguimos mayúsculas y minúsculas. Puedes escribir el sustantivo con o sin artículo.</p>
+      <p class="small muted">Mayúsculas y minúsculas no importan. Puedes escribir el sustantivo con o sin artículo.</p>
     </section>
 
-    ${session.feedback ? `<div class="feedback">${session.feedback}</div>` : ""}
-
-    <div class="action-row">
-      ${session.answered
-        ? '<button class="btn primary" id="continueQuestion">Continuar</button>'
-        : '<button class="btn primary" id="checkTyping">Comprobar</button>'}
-    </div>
+    ${session.answered
+      ? feedbackDock("continueQuestion")
+      : '<div class="activity-actions"><button class="btn primary" id="checkTyping">Comprobar</button></div>'}
   `;
 }
-
 async function flashcardResult(knew) {
   const word = sessionWord();
   let p = progressFor(word.id);
@@ -591,12 +629,13 @@ async function choiceResult(optionId) {
   if (session.answered) return;
 
   const word = sessionWord();
-  const correct = optionId === word.id;
+  const correct = optionId === session.correctChoice;
   let p = progressFor(word.id);
   const now = dateOnly();
 
   session.answered = true;
   session.selected = optionId;
+  session.feedbackTone = correct ? "correct" : "wrong";
 
   if (correct) {
     const cleanNext = p.learningStep === 1 ? 2 : 0;
@@ -609,19 +648,20 @@ async function choiceResult(optionId) {
       lastSuccessAt: now,
       correctCount: (p.correctCount || 0) + 1
     };
-    session.feedback = cleanNext === 2
-      ? "✅ Correcto. Mantienes una secuencia limpia."
-      : "✅ Correcto, pero esta palabra tuvo un fallo antes. La reforzaremos otra vez.";
+    session.feedback = wordExplanation(
+      word,
+      true,
+      cleanNext === 2 ? "Has completado correctamente esta fase." : "La palabra seguirá reforzándose porque la secuencia anterior no estaba limpia."
+    );
   } else {
     p = scheduleFailure(p, now);
     session.queue.push(word.id);
-    session.feedback = `❌ La respuesta era <b>${escapeHTML(word.article ? word.article + " " : "")}${escapeHTML(word.german)}</b>. Volverá a aparecer.`;
+    session.feedback = wordExplanation(word, false, "Volverá a aparecer para que la consolides.");
   }
 
   await persist(p);
   render();
 }
-
 function normalizeAnswer(value) {
   return String(value || "")
     .trim()
@@ -643,6 +683,7 @@ async function typingResult() {
   let p = progressFor(word.id);
 
   state.session.answered = true;
+  state.session.feedbackTone = correct ? "correct" : "wrong";
 
   if (correct && p.learningStep === 2) {
     p = scheduleNewlyLearned({
@@ -650,7 +691,7 @@ async function typingResult() {
       learningStep: 3,
       bestLearningStep: 3
     }, now);
-    state.session.feedback = "✅ Perfecto. Has superado las tres etapas seguidas: palabra aprendida.";
+    state.session.feedback = wordExplanation(word, true, "Has completado las tres fases y esta palabra entra en repetición espaciada.");
   } else if (correct) {
     p = {
       ...p,
@@ -660,17 +701,16 @@ async function typingResult() {
       lastSuccessAt: now,
       correctCount: (p.correctCount || 0) + 1
     };
-    state.session.feedback = "✅ La has escrito bien, pero hubo un fallo previo. Harás otro ciclo corto para consolidarla.";
+    state.session.feedback = wordExplanation(word, true, "La respuesta es correcta, pero repetirás un ciclo corto porque hubo un fallo previo.");
   } else {
     p = scheduleFailure(p, now);
     state.session.queue.push(word.id);
-    state.session.feedback = `❌ Era <b>${escapeHTML(word.article ? word.article + " " : "")}${escapeHTML(word.german)}</b>. Volverá a aparecer.`;
+    state.session.feedback = wordExplanation(word, false, "Volverá a aparecer antes de poder considerarla aprendida.");
   }
 
   await persist(p);
   render();
 }
-
 function resetQuestionState() {
   const session = state.session;
   session.revealed = false;
