@@ -37,4 +37,5 @@ a1-reparatur|act-48|Reparatur|reparación|die||Die Reparatur ist sehr teuer.|�
 a1-schluss|act-48|Schluss|final / fin|der||Ich muss jetzt Schluss machen. Zum Schluss gibt er uns allen die Hand.|📦
 a1-strae|act-48|Straße|calle|die|-n|In welcher Straße wohnen Sie?|📦
 a1-teil|act-48|Teil|parte|der|-e|Lies bitte auch den zweiten Teil.|📦
-a1-zigarette|act-48|Zigarette|cigarrillo|die|-n|Wie teuer sind die Zigaretten?|📦`;
+a1-zigarette|act-48|Zigarette|cigarrillo|die|-n|Wie teuer sind die Zigaretten?|📦
+a1-und|act-46|und|y|||Peter und Helmut sind meine Söhne.|🧩`;
