@@ -17,9 +17,9 @@ a1-einsteigen|act-19|einsteigen|subir / entrar (en transporte)|||Schnell, steig 
 a1-fahren|act-19|fahren|ir / conducir|||Ich fahre mit dem Auto zur Arbeit.|🚆
 a1-fahrer|act-19|Fahrer|conductor|der||Bitte nicht mit dem Fahrer sprechen!|🚆
 a1-fahrkarte|act-19|Fahrkarte|billete de transporte|die|-n|Hast du schon eine Fahrkarte?|🚆
-a1-fahrrad|act-19|Fahrrad|bicicleta|das|-ä, er|Fährst du mit dem Fahrrad oder mit dem Auto?|🚆
-a1-fliegen|act-19|fliegen|volar|||Ich fliege nicht gern. Deshalb fahre ich mit dem Zug.|🚆
-a1-abfliegen|act-19|abfliegen|despegar / salir en avión|||Wann fliegst du ab?|🚆
+a1-fahrrad|act-20|Fahrrad|bicicleta|das|-ä, er|Fährst du mit dem Fahrrad oder mit dem Auto?|🚆
+a1-fliegen|act-20|fliegen|volar|||Ich fliege nicht gern. Deshalb fahre ich mit dem Zug.|🚆
+a1-abfliegen|act-20|abfliegen|despegar / salir en avión|||Wann fliegst du ab?|🚆
 a1-abflug|act-20|Abflug|salida / despegue (vuelo)|der||Der Abflug ist um 11.20 Uhr.|🚆
 a1-flughafen|act-20|Flughafen|aeropuerto|der||Kannst du mich zum Flughafen bringen?|🚆
 a1-flugzeug|act-20|Flugzeug|avión|das||Das Flugzeug aus Berlin kommt heute später an.|🚆
@@ -55,26 +55,26 @@ a1-urlaub|act-21|Urlaub|vacaciones|der||Ich nehme im September Urlaub.|🧳
 a1-absender|act-22|Absender|remitente|der||Da ist ein Brief für dich ohne Absender.|🏛️
 a1-anmeldung|act-22|Anmeldung|inscripción / registro|die||Eine Anmeldung für diesen Kurs ist nicht mehr möglich.|🏛️
 a1-anrede|act-22|Anrede|tratamiento / saludo inicial|die||Schreiben Sie auch eine Anrede und einen Gruß.|🏛️
-a1-anruf|act-22|Anruf|llamada|der|-e|Sie bekommt viele Anrufe auf ihrem Handy.|🏛️
-a1-anrufbeantworter|act-22|Anrufbeantworter|contestador automático|der||Wir sind im Moment nicht da. Sprechen Sie bitte auf den Anrufbeantworter.|🏛️
 a1-auskunft|act-22|Auskunft|información|die|-ü, e|Können Sie mir eine Auskunft geben?|🏛️
 a1-bank|act-22|Bank|banco / banco para sentarse|die||Die Bank schließt schon um vier Uhr. Er sitzt im Park auf einer Bank und liest.|🏛️
 a1-brief|act-22|Brief|carta|der|-e|Haben Sie einen Brief für mich?|🏛️
 a1-briefmarke|act-22|Briefmarke|sello|die|-n|Kaufst du bitte Briefmarken bei der Post.|🏛️
-a1-e-mail|act-22|E-Mail|correo electrónico|die|-s|Ich habe Ihre E-Mail nicht bekommen.|🏛️
 a1-empfanger|act-22|Empfänger|destinatario / receptor|der|–|Auf dem Brief steht dein Name, also bist du der Empfänger.|🏛️
-a1-fax|act-22|Fax|fax|das|-e|Schicken Sie uns einfach ein Fax!|🏛️
 a1-information|act-22|Information|información|die|-en|Wenn Sie Fragen haben, gehen Sie zur Information. Wir haben hier wichtige Informationen für Sie.|🏛️
-a1-internet|act-22|Internet|internet|das||Das findest du im Internet.|🏛️
 a1-konto|act-22|Konto|cuenta bancaria|das||Das Geld überweisen wir am ersten März auf Ihr Konto.|🏛️
-a1-polizei|act-22|Polizei|policía|die||Holen Sie die Polizei!|🏛️
-a1-post|act-22|Post|correos|die||Wo ist die Post, bitte? Ist Post da?|🏛️
-a1-praxis|act-22|Praxis|consulta / práctica|die||Die Praxis ist ab acht Uhr geöffnet.|🏛️
-a1-prospekt|act-22|Prospekt|folleto|der|-e|Bitte schicken Sie mir einen Prospekt von Ihrem Hotel.|🏛️
-a1-rechnung|act-22|Rechnung|cuenta / factura|die|-en|Die Rechnung, bitte.|🏛️
-a1-schalter|act-22|Schalter|ventanilla / mostrador / interruptor|der||Gehen Sie bitte zum Schalter drei!|🏛️
-a1-schild|act-22|Schild|cartel / señal|das|-er|Haben Sie nicht das Schild gesehen?|🏛️
-a1-telefon|act-23|Telefon|teléfono|das||Haben Sie Telefon?|🏛️
+a1-polizei|act-23|Polizei|policía|die||Holen Sie die Polizei!|🏛️
+a1-post|act-23|Post|correos|die||Wo ist die Post, bitte? Ist Post da?|🏛️
+a1-praxis|act-23|Praxis|consulta / práctica|die||Die Praxis ist ab acht Uhr geöffnet.|🏛️
+a1-prospekt|act-23|Prospekt|folleto|der|-e|Bitte schicken Sie mir einen Prospekt von Ihrem Hotel.|🏛️
+a1-rechnung|act-23|Rechnung|cuenta / factura|die|-en|Die Rechnung, bitte.|🏛️
+a1-schalter|act-23|Schalter|ventanilla / mostrador / interruptor|der||Gehen Sie bitte zum Schalter drei!|🏛️
+a1-schild|act-23|Schild|cartel / señal|das|-er|Haben Sie nicht das Schild gesehen?|🏛️
 a1-unterschrift|act-23|Unterschrift|firma|die||Hier fehlt noch Ihre Unterschrift.|🏛️
 a1-zoll|act-23|Zoll|aduana|der||Wir müssen noch durch den Zoll.|🏛️
+a1-anruf|act-24|Anruf|llamada|der|-e|Sie bekommt viele Anrufe auf ihrem Handy.|🏛️
+a1-anrufbeantworter|act-24|Anrufbeantworter|contestador automático|der||Wir sind im Moment nicht da. Sprechen Sie bitte auf den Anrufbeantworter.|🏛️
+a1-e-mail|act-24|E-Mail|correo electrónico|die|-s|Ich habe Ihre E-Mail nicht bekommen.|🏛️
+a1-fax|act-24|Fax|fax|das|-e|Schicken Sie uns einfach ein Fax!|🏛️
+a1-internet|act-24|Internet|internet|das||Das findest du im Internet.|🏛️
+a1-telefon|act-24|Telefon|teléfono|das||Haben Sie Telefon?|🏛️
 a1-handy|act-24|Handy|móvil / teléfono móvil|das|-s|In der Schule bitte die Handys ausmachen!|📱`;
