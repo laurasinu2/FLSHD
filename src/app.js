@@ -211,11 +211,55 @@ function render() {
 }
 
 function renderHome() {
+  const nodes = [];
+  THEMES.forEach((theme, index) => {
+    const progress = topicProgress(theme.id);
+    const unlocked = themeUnlocked(theme.id);
+    const status = unlocked
+      ? (progress === 100 ? "✓ Completado" : progress > 0 ? "En progreso" : "Por descubrir")
+      : "🔒 Bloqueado";
+    const statusClass = !unlocked ? "locked" : progress === 100 ? "done" : progress > 0 ? "partial" : "";
+
+    nodes.push(`
+      <button class="topic-node ${unlocked ? "" : "locked"}" data-topic="${theme.id}"
+        aria-label="${escapeHTML(theme.name)}, ${unlocked ? progress + "% completado" : "bloqueado"}">
+        <span class="topic-index">${index + 1}</span>
+        <span class="progress-ring" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow="${progress}" style="--p:${progress};--tone:${theme.tone}">
+          <span class="ring-inner" aria-hidden="true">${theme.icon}</span>
+          ${unlocked ? "" : '<span class="lock-mark">🔒</span>'}
+        </span>
+        <strong>${escapeHTML(theme.name)}</strong>
+        <small>${progress}% aprendido</small>
+        <span class="topic-state ${statusClass}">${status}</span>
+      </button>
+    `);
+
+    const checkpoint = CHECKPOINTS.find(item => item.after === index + 1);
+    if (checkpoint) {
+      const passed = checkpointPassed(checkpoint.id);
+      const available = checkpointAvailable(checkpoint);
+      nodes.push(`
+        <div class="checkpoint-row">
+          <span class="checkpoint-line"></span>
+          <button class="checkpoint-node ${passed ? "passed" : available ? "available" : "locked"}"
+            data-checkpoint="${checkpoint.id}" ${available || passed ? "" : "disabled"}
+            aria-label="${escapeHTML(checkpoint.title)}">
+            <span class="checkpoint-circle">${passed ? "✓" : checkpoint.icon}</span>
+            <strong>${escapeHTML(checkpoint.title)}</strong>
+            <small>${passed ? "Superada" : available ? "Lista para hacer" : "Completa los 6 temas"}</small>
+          </button>
+          <span class="checkpoint-line"></span>
+        </div>
+      `);
+    }
+  });
+
   return `
     <section class="hero">
       <div class="eyebrow">Tu aventura de vocabulario</div>
       <h1>Aprende alemán con tu mundo 🇩🇪</h1>
-      <p>Fotografía tus objetos, aprende su nombre y deja que FLSHD decida cuándo debes volver a verlos.</p>
+      <p>Fotografía tus objetos, aprende su nombre y supera una prueba perfecta cada 6 temas para abrir el siguiente bloque.</p>
     </section>
 
     <section class="summary-grid" aria-label="Resumen">
@@ -230,40 +274,53 @@ function renderHome() {
     </section>
 
     <h2 class="section-title">Tu camino de aprendizaje</h2>
-    <p class="section-note">Empieza arriba y avanza hacia abajo. Cada anillo muestra tu progreso real.</p>
+    <p class="section-note">Cada bloque contiene 6 temas. La prueba de nivel exige 0 errores.</p>
 
-    <section class="learning-path" aria-label="Temas">
-      ${THEMES.map((theme, index) => {
-        const progress = topicProgress(theme.id);
-        const status = progress === 100 ? "✓ Completado" : progress > 0 ? "En progreso" : "Por descubrir";
-        const statusClass = progress === 100 ? "done" : progress > 0 ? "partial" : "";
-        return `
-          <button class="topic-node" data-topic="${theme.id}" aria-label="${escapeHTML(theme.name)}, ${progress}%">
-            <span class="topic-index">${index + 1}</span>
-            <span class="progress-ring" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-              aria-valuenow="${progress}" style="--p:${progress};--tone:${theme.tone}">
-              <span class="ring-inner" aria-hidden="true">${theme.icon}</span>
-            </span>
-            <strong>${escapeHTML(theme.name)}</strong>
-            <small>${progress}% aprendido</small>
-            <span class="topic-state ${statusClass}">${status}</span>
-          </button>
-        `;
-      }).join("")}
+    <section class="learning-path" aria-label="Temas y pruebas de nivel">
+      ${nodes.join("")}
     </section>
 
     <div class="home-note">
-      📸 Las imágenes que subes quedan asociadas a cada palabra en este dispositivo.
+      🔒 Puedes abrir un tema bloqueado para consultar su vocabulario, pero no empezar la actividad hasta superar la prueba anterior.
       ${state.storageAvailable ? "" : "<br><b>Aviso:</b> el navegador no está permitiendo guardar datos de forma permanente."}
     </div>
   `;
 }
-
 function renderTopicIntro() {
   const theme = themeById(state.topicId);
   const words = topicWords(theme.id);
   const mastered = words.filter(word => progressFor(word.id).mastered).length;
   const photos = words.filter(word => state.images.has(word.id)).length;
+  const unlocked = themeUnlocked(theme.id);
+
+  if (!unlocked) {
+    return `
+      <section class="page-head">
+        <button class="back-btn" id="backHome" aria-label="Volver">←</button>
+        <div>
+          <h1>🔒 ${theme.icon} ${escapeHTML(theme.name)}</h1>
+          <p>Este bloque todavía no está desbloqueado.</p>
+        </div>
+      </section>
+
+      <div class="review-card locked-topic-card">
+        <h2>Puedes mirar el vocabulario</h2>
+        <p class="muted small">Supera la prueba de nivel anterior para poder practicar este tema.</p>
+      </div>
+
+      <div class="vocab-list">
+        ${words.map(word => `
+          <div class="vocab-row">
+            <span class="vocab-icon">${word.icon}</span>
+            <div>
+              <b>${escapeHTML(fullGerman(word))}</b>
+              <small>${escapeHTML(word.spanish)}</small>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
 
   return `
     <section class="page-head">
@@ -282,22 +339,20 @@ function renderTopicIntro() {
 
     <div class="stage-strip" aria-label="Etapas">
       <div class="stage-chip active">1 · 🃏 Flashcards</div>
-      <div class="stage-chip">2 · 🎯 Elegir</div>
+      <div class="stage-chip">2 · 🎯 Reconocer</div>
       <div class="stage-chip">3 · ✍️ Escribir</div>
     </div>
 
     <div class="review-card">
       <h2>Cómo funciona</h2>
       <p class="muted small">
-        Primero verás cada palabra como una tarjeta. Sube o haz tu propia foto, toca la tarjeta para revelar la palabra
-        y desliza a la derecha si la sabías o a la izquierda si no. Después tendrás preguntas de 4 opciones y,
-        finalmente, escribirás la palabra viendo la imagen.
+        Primero verás cada palabra como una tarjeta. Después tendrás preguntas variadas: significado, fotografía,
+        traducción inversa y artículo. La última fase exige escribir la palabra.
       </p>
       <button class="btn primary" id="startTopic">Empezar este tema</button>
     </div>
   `;
 }
-
 function startTopic(topicId) {
   const remaining = topicWords(topicId).filter(word => !progressFor(word.id).mastered);
 
