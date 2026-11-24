@@ -204,6 +204,11 @@ function render() {
 function renderHome() {
   const nodes = [];
   THEMES.forEach((theme, index) => {
+    if (index % BLOCK_SIZE === 0) {
+      const blockNumber = Math.floor(index / BLOCK_SIZE) + 1;
+      nodes.push(`<div class="block-label"><span>Bloque ${blockNumber}</span><small>6 actividades</small></div>`);
+    }
+
     const progress = topicProgress(theme.id);
     const unlocked = themeUnlocked(theme.id);
     const status = unlocked
