@@ -56,7 +56,6 @@ a1-schlieen|act-06|schließen|cerrar|||Bitte, schließen Sie die Tür.|🏠
 a1-geschlossen|act-06|geschlossen|cerrado|||Die Bank hat am Samstag geschlossen.|🏠
 a1-schlussel|act-06|Schlüssel|llave|der|–|Ich gebe Ihnen noch den Zimmerschlüssel.|🏠
 a1-schrank|act-06|Schrank|armario|der|-ä, e|Die Gläser stehen im Schrank.|🏠
-a1-auf-sein-539|act-06|auf sein|estar abierto|||Das Fenster ist noch auf.|🏠
 a1-sitzen|act-06|sitzen|estar sentado|||Wo sitzen Sie?|🏠
 a1-sofa|act-06|Sofa|sofá|das||Das Sofa ist neu.|🏠
 a1-stehen|act-06|stehen|estar de pie / estar|||Ich glaube es nicht, aber es steht in der Zeitung. Der Bus steht schon an der Haltestelle.|🏠
