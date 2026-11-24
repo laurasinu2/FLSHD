@@ -79,7 +79,7 @@ export function scheduleFailure(progress, now = dateOnly()) {
     lastFailureAt: now,
     lastSeenAt: now,
     lastReviewAt: progress.mastered ? now : progress.lastReviewAt,
-    reviewStep: 0,
+    reviewStep: progress.mastered ? -1 : 0,
     nextReviewAt: progress.mastered ? addDaysISO(retryDays) : progress.nextReviewAt,
     totalErrorCount: (progress.totalErrorCount || 0) + 1,
     errorDates: [...(progress.errorDates || []), now]
