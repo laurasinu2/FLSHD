@@ -19,7 +19,7 @@ a1-erlauben|act-40|erlauben|permitir|||Rauchen ist hier nicht erlaubt.|🏃
 a1-fehlen|act-40|fehlen|faltar|||Herr Müller ist nicht da, er fehlt schon seit drei Tagen. Was fehlt Ihnen?|🏃
 a1-finden|act-40|finden|encontrar|||Wir müssen den Schlüssel finden.|🏃
 a1-gehen|act-40|gehen|ir / caminar|||Ich weiß nicht, wie das geht. Wie geht‘s? Jetzt muss ich (aber) leider gehen. Ich muss zum Arzt gehen. Das geht nicht!|🏃
-a1-gehoren|act-40|gehören|pertenecer|||Wem gehört das?|🏃
+a1-gehoren|act-41|gehören|pertenecer|||Wem gehört das?|🏃
 a1-geradeaus|act-41|geradeaus|todo recto|||Gehen Sie immer geradeaus!|🏃
 a1-glauben|act-41|glauben|creer|||Sie können mir glauben, es ist so. Ich glaube, er kommt gleich.|🏃
 a1-haben|act-41|haben|tener|||Ich habe ein neues Auto.|🏃
@@ -39,9 +39,9 @@ a1-mitbringen|act-41|mitbringen|traer consigo|||Ich gehe einkaufen. Soll ich dir
 a1-mitkommen|act-41|mitkommen|venir con|||Ich gehe ins Kino. Kommst du mit?|🏃
 a1-mitmachen|act-41|mitmachen|participar|||Warum macht ihr nicht mit?|🏃
 a1-mitnehmen|act-41|mitnehmen|llevar consigo|||Nehmen wir meine Schwester ins Kino mit?|🏃
-a1-mochten|act-41|möchten|querer / desear|||Was möchten Sie trinken?|🏃
-a1-mogen|act-41|mögen|gustar|||Magst du Kaffee oder Tee?|🏃
-a1-mussen|act-41|müssen|tener que / deber|||Ich muss jeden Tag von 8 Uhr bis 18 Uhr arbeiten.|🏃
+a1-mochten|act-42|möchten|querer / desear|||Was möchten Sie trinken?|🏃
+a1-mogen|act-42|mögen|gustar|||Magst du Kaffee oder Tee?|🏃
+a1-mussen|act-42|müssen|tener que / deber|||Ich muss jeden Tag von 8 Uhr bis 18 Uhr arbeiten.|🏃
 a1-regnen|act-42|regnen|llover|||Heute regnet es.|🏃
 a1-scheinen|act-42|scheinen|brillar / parecer|||Die Sonne scheint.|🏃
 a1-schlafen|act-42|schlafen|dormir|||Ich schlafe meistens acht Stunden.|🏃
