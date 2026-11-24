@@ -80,4 +80,5 @@ a1-jetzt|act-36|jetzt|ahora|||Jetzt machen wir eine Pause.|🎨
 a1-jung|act-36|jung|joven|||Claudia ist 21. – Was? Noch so jung?|🎨
 a1-kaputt|act-36|kaputt|roto / estropeado|||Das Glas war teuer. Es geht sehr leicht kaputt.|🎨
 a1-klar|act-36|klar|claro|||Kommst du mit? – Klar!|🎨
-a1-klein|act-36|klein|pequeño|||Eltville ist eine kleine Stadt am Rhein.|🎨`;
+a1-klein|act-36|klein|pequeño|||Eltville ist eine kleine Stadt am Rhein.|🎨
+a1-einladung|act-31|Einladung|invitación|die||Danke für die Einladung!|💬`;
