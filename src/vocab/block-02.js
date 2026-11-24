@@ -93,4 +93,7 @@ a1-achtzehn|act-12|achtzehn|dieciocho||||🔢
 a1-neunzehn|act-12|neunzehn|diecinueve||||🔢
 a1-zwanzig|act-12|zwanzig|veinte||||🔢
 a1-einundzwanzig|act-12|einundzwanzig|veintiuno||||🔢
-a1-dreiig|act-12|dreißig|treinta||||🔢`;
+a1-dreiig|act-12|dreißig|treinta||||🔢
+a1-fisch|act-10|Fisch|pescado|der|-e|Ich esse gern Fisch. Fleisch mag ich nicht.|🍽️
+a1-gemuse|act-10|Gemüse|verdura / verduras|das||Gemüse brauchen wir auch noch.|🍽️
+a1-kuchen|act-10|Kuchen|pastel / tarta|der||Ich nehme ein Stück Kuchen.|🍽️`;
