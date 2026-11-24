@@ -96,9 +96,8 @@ function checkpointThemes(checkpoint) {
 }
 
 function checkpointAvailable(checkpoint) {
-  return checkpointThemes(checkpoint).every(theme => topicProgress(theme.id) === 100);
+  return Boolean(checkpoint);
 }
-
 function fullGerman(word) {
   return `${word.article ? word.article + " " : ""}${word.german}`;
 }
@@ -238,16 +237,14 @@ function renderHome() {
     const checkpoint = CHECKPOINTS.find(item => item.after === index + 1);
     if (checkpoint) {
       const passed = checkpointPassed(checkpoint.id);
-      const available = checkpointAvailable(checkpoint);
       nodes.push(`
         <div class="checkpoint-row">
           <span class="checkpoint-line"></span>
-          <button class="checkpoint-node ${passed ? "passed" : available ? "available" : "locked"}"
-            data-checkpoint="${checkpoint.id}" ${available || passed ? "" : "disabled"}
-            aria-label="${escapeHTML(checkpoint.title)}">
+          <button class="checkpoint-node ${passed ? "passed" : "available"}"
+            data-checkpoint="${checkpoint.id}" aria-label="${escapeHTML(checkpoint.title)}">
             <span class="checkpoint-circle">${passed ? "✓" : checkpoint.icon}</span>
             <strong>${escapeHTML(checkpoint.title)}</strong>
-            <small>${passed ? "Superada" : available ? "Lista para hacer" : "Completa los 6 temas"}</small>
+            <small>${passed ? "Superada" : "Hazla cuando quieras"}</small>
           </button>
           <span class="checkpoint-line"></span>
         </div>
@@ -256,34 +253,21 @@ function renderHome() {
   });
 
   return `
-    <section class="hero">
-      <div class="eyebrow">Tu aventura de vocabulario</div>
-      <h1>Aprende alemán con tu mundo 🇩🇪</h1>
-      <p>Fotografía tus objetos, aprende su nombre y supera una prueba perfecta cada 6 temas para abrir el siguiente bloque.</p>
-    </section>
-
-    <section class="summary-grid" aria-label="Resumen">
-      <button class="summary-card" id="continueLearning">
-        <span class="icon">🚀</span>
-        <span><strong>${learnedCount()} / ${WORDS.length}</strong><small>Palabras dominadas</small></span>
-      </button>
-      <button class="summary-card" id="openReview">
-        <span class="icon">🧠</span>
-        <span><strong>${dueWords().length}</strong><small>Repasos pendientes</small></span>
+    <section class="home-heading">
+      <div>
+        <h1>Tu camino de alemán 🇩🇪</h1>
+        <p>Supera cada prueba perfecta para desbloquear el siguiente bloque.</p>
+      </div>
+      <button class="review-shortcut" id="openReview" aria-label="Abrir repasos">
+        🧠 <b>${dueWords().length}</b>
       </button>
     </section>
-
-    <h2 class="section-title">Tu camino de aprendizaje</h2>
-    <p class="section-note">Cada bloque contiene 6 temas. La prueba de nivel exige 0 errores.</p>
 
     <section class="learning-path" aria-label="Temas y pruebas de nivel">
       ${nodes.join("")}
     </section>
 
-    <div class="home-note">
-      🔒 Puedes abrir un tema bloqueado para consultar su vocabulario, pero no empezar la actividad hasta superar la prueba anterior.
-      ${state.storageAvailable ? "" : "<br><b>Aviso:</b> el navegador no está permitiendo guardar datos de forma permanente."}
-    </div>
+    ${state.storageAvailable ? "" : '<div class="home-note"><b>Aviso:</b> el navegador no está permitiendo guardar datos de forma permanente.</div>'}
   `;
 }
 function renderTopicIntro() {
@@ -775,7 +759,7 @@ function buildCheckpointQueue(checkpoint) {
 
 function startCheckpoint(checkpointId) {
   const checkpoint = checkpointById(checkpointId);
-  if (!checkpoint || (!checkpointAvailable(checkpoint) && !checkpointPassed(checkpointId))) return;
+  if (!checkpoint) return;
 
   state.session = {
     type: "checkpoint",
@@ -796,7 +780,6 @@ function startCheckpoint(checkpointId) {
   state.screen = "checkpoint-session";
   render();
 }
-
 function prepareCheckpointQuestion(word) {
   const session = state.session;
   if (session.optionWordId === word.id && session.questionKind) return;
