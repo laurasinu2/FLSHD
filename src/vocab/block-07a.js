@@ -59,4 +59,7 @@ a1-grun|act-39|grün|verde||||🎨
 a1-wei|act-39|weiß|blanco||||🎨
 a1-rot|act-39|rot|rojo||||🎨
 a1-gelb|act-39|gelb|amarillo||||🎨
-a1-braun|act-39|braun|marrón||||🎨`;
+a1-braun|act-39|braun|marrón||||🎨
+a1-billig|act-39|billig|barato|||Die Jacke kostet nur 10 Euro! Die ist aber billig!|🎨
+a1-nie|act-39|nie|nunca|||Er kommt nie pünktlich.|🎨
+a1-weit|act-39|weit|lejos|||Zum Bahnhof ist es nicht weit.|🎨`;
