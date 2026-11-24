@@ -13,58 +13,73 @@ import { BLOCK_08B_RAW } from "./vocab/block-08b.js";
 const tone = ["#eef8dc","#edf5ff","#fff1e9","#f8edff","#e9f8f4","#fff6db"];
 
 const specs = [
-  ["Saludos, cortesía y expresiones","👋",15],
-  ["Identidad y datos personales","🪪",22],
-  ["Personas, familia y relaciones · Parte 1","👨‍👩‍👧",22],
-  ["Personas, familia y relaciones · Parte 2","👨‍👩‍👧",22],
-  ["Casa y vivienda · Parte 1","🏠",17],
-  ["Casa y vivienda · Parte 2","🏠",17],
-  ["Casa y vivienda · Parte 3","🏠",16],
-  ["Comida, bebida y restaurante · Parte 1","🍽️",19],
-  ["Comida, bebida y restaurante · Parte 2","🍽️",19],
-  ["Comida, bebida y restaurante · Parte 3","🍽️",18],
-  ["Compras, ropa y dinero","🛍️",14],
-  ["Números, cantidades y medidas · Parte 1","🔢",17],
-  ["Números, cantidades y medidas · Parte 2","🔢",17],
-  ["Números, cantidades y medidas · Parte 3","🔢",16],
-  ["Tiempo, fechas y calendario · Parte 1","📅",16],
-  ["Tiempo, fechas y calendario · Parte 2","📅",15],
-  ["Tiempo, fechas y calendario · Parte 3","📅",15],
-  ["Direcciones y orientación","🧭",4],
-  ["Transporte y movilidad · Parte 1","🚆",19],
-  ["Transporte y movilidad · Parte 2","🚆",18],
-  ["Viajes y alojamiento","🧳",17],
-  ["Servicios, correo, banco y trámites · Parte 1","🏛️",10],
-  ["Servicios, correo, banco y trámites · Parte 2","🏛️",9],
-  ["Tecnología y comunicación","📱",7],
-  ["Estudio, idioma y examen · Parte 1","📚",17],
-  ["Estudio, idioma y examen · Parte 2","📚",17],
-  ["Estudio, idioma y examen · Parte 3","📚",17],
-  ["Trabajo y profesión","💼",15],
-  ["Cuerpo y salud","🩺",14],
-  ["Comunicación y vida social · Parte 1","💬",13],
-  ["Comunicación y vida social · Parte 2","💬",13],
-  ["Ocio, cultura y deporte · Parte 1","⚽",13],
-  ["Ocio, cultura y deporte · Parte 2","⚽",12],
-  ["Naturaleza, entorno y clima","🌦️",11],
-  ["Descripciones, estados y adverbios · Parte 1","🎨",22],
-  ["Descripciones, estados y adverbios · Parte 2","🎨",22],
-  ["Descripciones, estados y adverbios · Parte 3","🎨",22],
-  ["Descripciones, estados y adverbios · Parte 4","🎨",22],
-  ["Descripciones, estados y adverbios · Parte 5","🎨",21],
-  ["Verbos y acciones esenciales · Parte 1","🏃",21],
-  ["Verbos y acciones esenciales · Parte 2","🏃",20],
-  ["Verbos y acciones esenciales · Parte 3","🏃",20],
-  ["Pronombres, conectores y preposiciones · Parte 1","🧩",20],
-  ["Pronombres, conectores y preposiciones · Parte 2","🧩",20],
-  ["Pronombres, conectores y preposiciones · Parte 3","🧩",19],
-  ["Pronombres, conectores y preposiciones · Parte 4","🧩",19],
-  ["Objetos y nombres generales · Parte 1","📦",15],
-  ["Objetos y nombres generales · Parte 2","📦",14]
+  // Bloque 1
+  ["act-01","Saludos, cortesía y expresiones","👋",15],
+  ["act-02","Identidad y datos personales","🪪",22],
+  ["act-03","Personas, familia y relaciones · Parte 1","👨‍👩‍👧",22],
+  ["act-05","Casa y vivienda · Parte 1","🏠",17],
+  ["act-08","Comida, bebida y restaurante · Parte 1","🍽️",19],
+  ["act-12","Números, cantidades y medidas · Parte 1","🔢",17],
+
+  // Bloque 2
+  ["act-15","Tiempo, fechas y calendario · Parte 1","📅",16],
+  ["act-18","Direcciones y orientación","🧭",4],
+  ["act-19","Transporte y movilidad · Parte 1","🚆",19],
+  ["act-25","Estudio, idioma y examen · Parte 1","📚",17],
+  ["act-35","Descripciones, estados y adverbios · Parte 1","🎨",22],
+  ["act-11","Compras, ropa y dinero","🛍️",14],
+
+  // Bloque 3
+  ["act-04","Personas, familia y relaciones · Parte 2","👨‍👩‍👧",22],
+  ["act-06","Casa y vivienda · Parte 2","🏠",17],
+  ["act-09","Comida, bebida y restaurante · Parte 2","🍽️",19],
+  ["act-21","Viajes y alojamiento","🧳",17],
+  ["act-28","Trabajo y profesión","💼",15],
+  ["act-40","Verbos y acciones esenciales · Parte 1","🏃",21],
+
+  // Bloque 4
+  ["act-13","Números, cantidades y medidas · Parte 2","🔢",17],
+  ["act-16","Tiempo, fechas y calendario · Parte 2","📅",15],
+  ["act-22","Servicios, correo, banco y trámites · Parte 1","🏛️",10],
+  ["act-30","Comunicación y vida social · Parte 1","💬",13],
+  ["act-36","Descripciones, estados y adverbios · Parte 2","🎨",22],
+  ["act-43","Pronombres, conectores y preposiciones · Parte 1","🧩",20],
+
+  // Bloque 5
+  ["act-07","Casa y vivienda · Parte 3","🏠",16],
+  ["act-10","Comida, bebida y restaurante · Parte 3","🍽️",18],
+  ["act-20","Transporte y movilidad · Parte 2","🚆",18],
+  ["act-26","Estudio, idioma y examen · Parte 2","📚",17],
+  ["act-32","Ocio, cultura y deporte · Parte 1","⚽",13],
+  ["act-44","Pronombres, conectores y preposiciones · Parte 2","🧩",20],
+
+  // Bloque 6
+  ["act-14","Números, cantidades y medidas · Parte 3","🔢",16],
+  ["act-17","Tiempo, fechas y calendario · Parte 3","📅",15],
+  ["act-23","Servicios, correo, banco y trámites · Parte 2","🏛️",9],
+  ["act-34","Naturaleza, entorno y clima","🌦️",11],
+  ["act-37","Descripciones, estados y adverbios · Parte 3","🎨",22],
+  ["act-41","Verbos y acciones esenciales · Parte 2","🏃",20],
+
+  // Bloque 7
+  ["act-27","Estudio, idioma y examen · Parte 3","📚",17],
+  ["act-31","Comunicación y vida social · Parte 2","💬",13],
+  ["act-33","Ocio, cultura y deporte · Parte 2","⚽",12],
+  ["act-38","Descripciones, estados y adverbios · Parte 4","🎨",22],
+  ["act-46","Pronombres, conectores y preposiciones · Parte 4","🧩",19],
+  ["act-47","Objetos y nombres generales · Parte 1","📦",15],
+
+  // Bloque 8
+  ["act-24","Tecnología y comunicación","📱",7],
+  ["act-29","Cuerpo y salud","🩺",14],
+  ["act-39","Descripciones, estados y adverbios · Parte 5","🎨",21],
+  ["act-42","Verbos y acciones esenciales · Parte 3","🏃",20],
+  ["act-45","Pronombres, conectores y preposiciones · Parte 3","🧩",19],
+  ["act-48","Objetos y nombres generales · Parte 2","📦",14]
 ];
 
-export const THEMES = specs.map(([name,icon,count], index) => ({
-  id: `act-${String(index + 1).padStart(2,"0")}`,
+export const THEMES = specs.map(([id,name,icon,count], index) => ({
+  id,
   name,
   base: name.replace(/ · Parte \d+$/,""),
   icon,
