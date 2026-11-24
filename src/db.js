@@ -164,6 +164,24 @@ export async function removeWordImage(wordId) {
   await txDone(tx);
 }
 
+
+export async function getMeta(key, fallback = null) {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const request = db.transaction("meta", "readonly").objectStore("meta").get(key);
+    request.onsuccess = () => resolve(request.result?.value ?? fallback);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+export async function setMeta(key, value) {
+  const db = await openDatabase();
+  const tx = db.transaction("meta", "readwrite");
+  tx.objectStore("meta").put({ key, value, updatedAt: new Date().toISOString() });
+  await txDone(tx);
+  return value;
+}
+
 export async function exportUserData() {
   const [progress, images] = await Promise.all([
     getAllProgress(),
