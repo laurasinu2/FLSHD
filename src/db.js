@@ -261,7 +261,7 @@ export async function applyCloudRow(row) {
   }
   await done;
 }
-export async function importGuestData(validIds) {
+export async function importGuestData(validIds, resizePhoto) {
   if(!accountId) throw new Error("Inicia sesión primero");
   const guest=await new Promise((resolve,reject)=>{
     const req=indexedDB.open(DB_NAME,DB_VERSION);
@@ -274,8 +274,11 @@ export async function importGuestData(validIds) {
     let count=0;
     for(const [kind,name] of [["progress","progress"],["image","images"],["checkpoints","meta"]]){
       const rows=await rowsFrom(guest,name);
-      for(const row of rows){
+      for(let row of rows){
         if(kind==="checkpoints" ? row.key!=="checkpoints-v3" : !validIds.has(row.wordId)) continue;
+        if(kind==="image" && row.dataUrl?.length>430000) {
+          row={...row,dataUrl:await resizePhoto(row.dataUrl)};
+        }
         const tx=target.transaction(name,"readwrite"),done=txDone(tx),store=tx.objectStore(name);
         const key=kind==="progress"?row.wordId:kind==="image"?row.id:row.key;
         const current=await requestResult(store.get(key));
