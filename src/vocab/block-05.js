@@ -97,4 +97,6 @@ a1-lachen|act-30|lachen|reír|||Die Kinder lachen viel.|💬
 a1-lieben|act-30|lieben|amar|||Ich liebe dich!|💬
 a1-sagen|act-30|sagen|decir|||Sag mal, wie geht es dir denn?|💬
 a1-schicken|act-30|schicken|enviar|||Bitte schicken Sie mir eine E-Mail.|💬
-a1-sprechen|act-30|sprechen|hablar|||Kann ich (mit) Herrn Klein sprechen?|💬`;
+a1-sprechen|act-30|sprechen|hablar|||Kann ich (mit) Herrn Klein sprechen?|💬
+a1-schreiben|act-27|schreiben|escribir|||Er schreibt jeden Tag fünfzig E-Mails.|📚
+a1-stelle|act-28|Stelle|puesto / empleo|die|-n|Ich habe eine neue Stelle.|💼`;
