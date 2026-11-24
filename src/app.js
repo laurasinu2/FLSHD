@@ -984,7 +984,7 @@ async function continueCheckpoint() {
     state.checkpoints[session.checkpointId] = true;
     session.result = "passed";
     try {
-      await setMeta("checkpoints-v2", state.checkpoints);
+      await setMeta("checkpoints-v3", state.checkpoints);
     } catch (error) {
       state.storageAvailable = false;
       console.warn("Could not persist checkpoint state", error);
@@ -1409,7 +1409,7 @@ async function init() {
     const [progress, images, checkpoints] = await Promise.all([
       getAllProgress(),
       getAllImages(),
-      getMeta("checkpoints-v2", state.checkpoints)
+      getMeta("checkpoints-v3", state.checkpoints)
     ]);
     state.progress = progress;
     state.images = images;
