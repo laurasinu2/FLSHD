@@ -2,12 +2,21 @@ const DB_NAME = "flshd-deutsch";
 const DB_VERSION = 2;
 
 let dbPromise;
+let accountId = null;
+let notifyChange = () => {};
+
+// Account is selected before opening IndexedDB and never switched in-place.
+export function configureLocalAccount(id, onChange = () => {}) {
+  if (dbPromise) throw new Error("Local database already opened");
+  accountId = id || null;
+  notifyChange = onChange;
+}
 
 export function openDatabase() {
   if (dbPromise) return dbPromise;
 
   dbPromise = new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    const request = indexedDB.open(accountId ? DB_NAME + "-" + accountId : DB_NAME, DB_VERSION);
 
     request.onupgradeneeded = () => {
       const db = request.result;
@@ -110,10 +119,11 @@ export async function getProgress(wordId) {
 
 export async function saveProgress(progress) {
   const db = await openDatabase();
-  const value = { ...progress, updatedAt: new Date().toISOString() };
+  const value = { ...progress, updatedAt: new Date().toISOString(), _pending: Boolean(accountId) };
   const tx = db.transaction("progress", "readwrite");
   tx.objectStore("progress").put(value);
   await txDone(tx);
+  if (accountId) notifyChange();
   return value;
 }
 
@@ -145,12 +155,14 @@ export async function saveWordImage(wordId, dataUrl) {
     id: `img-${wordId}`,
     wordId,
     dataUrl,
+    _pending: Boolean(accountId),
     updatedAt: new Date().toISOString()
   };
 
   const tx = db.transaction("images", "readwrite");
   tx.objectStore("images").put(image);
   await txDone(tx);
+  if (accountId) notifyChange();
   return image;
 }
 
@@ -177,8 +189,9 @@ export async function getMeta(key, fallback = null) {
 export async function setMeta(key, value) {
   const db = await openDatabase();
   const tx = db.transaction("meta", "readwrite");
-  tx.objectStore("meta").put({ key, value, updatedAt: new Date().toISOString() });
+  tx.objectStore("meta").put({ key, value, updatedAt: new Date().toISOString(), _pending: Boolean(accountId && key === "checkpoints-v3") });
   await txDone(tx);
+  if (accountId && key === "checkpoints-v3") notifyChange();
   return value;
 }
 
@@ -194,4 +207,88 @@ export async function exportUserData() {
     progress: [...progress.values()],
     images: [...images.values()]
   };
+}
+
+const storeForKind = { progress: "progress", image: "images", checkpoints: "meta" };
+const keyForKind = (kind, id) => kind === "image" ? "img-" + id : id;
+const requestResult = req => new Promise((resolve,reject) => {
+  req.onsuccess = () => resolve(req.result);
+  req.onerror = () => reject(req.error);
+});
+async function rowsFrom(db, store) {
+  return requestResult(db.transaction(store, "readonly").objectStore(store).getAll());
+}
+function asCloud(kind, row) {
+  const { _pending, ...payload } = row;
+  return {
+    kind,
+    record_id: kind === "checkpoints" ? row.key : row.wordId,
+    payload: kind === "checkpoints" ? Object.fromEntries(Object.entries(row.value || {}).filter(([,v])=>v===true)) : payload,
+    changed_at: row.updatedAt || "1970-01-01T00:00:00.000Z"
+  };
+}
+export async function pendingCloudRows() {
+  const db = await openDatabase();
+  const [p,i,m] = await Promise.all(["progress","images","meta"].map(s=>rowsFrom(db,s)));
+  return [
+    ...p.filter(r=>r._pending).map(r=>asCloud("progress",r)),
+    ...i.filter(r=>r._pending).map(r=>asCloud("image",r)),
+    ...m.filter(r=>r._pending && r.key==="checkpoints-v3").map(r=>asCloud("checkpoints",r))
+  ];
+}
+export async function acknowledgeCloudRow(row) {
+  const db = await openDatabase(), tx = db.transaction(storeForKind[row.kind],"readwrite");
+  const done = txDone(tx), store = tx.objectStore(storeForKind[row.kind]);
+  const current = await requestResult(store.get(keyForKind(row.kind,row.record_id)));
+  if(current && Date.parse(current.updatedAt) === Date.parse(row.changed_at)) store.put({...current,_pending:false});
+  await done;
+}
+export async function applyCloudRow(row) {
+  if (!storeForKind[row.kind]) return;
+  const db = await openDatabase(), name=storeForKind[row.kind], tx=db.transaction(name,"readwrite");
+  const done=txDone(tx),store=tx.objectStore(name), key=keyForKind(row.kind,row.record_id);
+  const current=await requestResult(store.get(key));
+  if (row.kind === "checkpoints") {
+    if(row.record_id==="checkpoints-v3") {
+      const value={...(current?.value||{}),...row.payload};
+      store.put({key,value,updatedAt: new Date(Math.max(Date.parse(current?.updatedAt||0)||0,Date.parse(row.changed_at))).toISOString(),_pending:Boolean(current?._pending)});
+    }
+  } else if (!current || (!current._pending && Date.parse(row.changed_at)>=Date.parse(current.updatedAt||0))) {
+    const payload={...row.payload,wordId:row.record_id,updatedAt:row.changed_at,_pending:false};
+    if (row.kind === "image") {
+      if(typeof payload.dataUrl==="string" && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(payload.dataUrl)) store.put({...payload,id:key});
+    } else store.put(payload);
+  }
+  await done;
+}
+export async function importGuestData(validIds) {
+  if(!accountId) throw new Error("Inicia sesión primero");
+  const guest=await new Promise((resolve,reject)=>{
+    const req=indexedDB.open(DB_NAME,DB_VERSION);
+    req.onupgradeneeded=()=>{req.transaction.abort();};
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(new Error("No hay datos locales previos disponibles"));
+  });
+  try {
+    const target=await openDatabase();
+    let count=0;
+    for(const [kind,name] of [["progress","progress"],["image","images"],["checkpoints","meta"]]){
+      const rows=await rowsFrom(guest,name);
+      for(const row of rows){
+        if(kind==="checkpoints" ? row.key!=="checkpoints-v3" : !validIds.has(row.wordId)) continue;
+        const tx=target.transaction(name,"readwrite"),done=txDone(tx),store=tx.objectStore(name);
+        const key=kind==="progress"?row.wordId:kind==="image"?row.id:row.key;
+        const current=await requestResult(store.get(key));
+        if(kind==="checkpoints"){
+          const value={...(current?.value||{}),...Object.fromEntries(Object.entries(row.value||{}).filter(([,v])=>v===true))};
+          store.put({key,value,updatedAt:new Date().toISOString(),_pending:true});count++;
+        } else if(!current){
+          store.put({...row,updatedAt:row.updatedAt||new Date().toISOString(),_pending:true});count++;
+        }
+        await done;
+      }
+    }
+    notifyChange();
+    return count;
+  } finally {guest.close();}
 }
