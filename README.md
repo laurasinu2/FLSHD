@@ -29,6 +29,12 @@ Implementado:
 - Tras un fallo: repaso en 1–2 días y reinicio de la escalera.
 - Priorización por retraso y fallos de los últimos 7 días.
 - Pestañas Aprender, Repasar y Progreso.
+- Pruebas de nivel después de cada bloque de 6 temas.
+- Las pruebas de nivel exigen 0 errores; un fallo termina el intento, pero no hay límite de reintentos.
+- Los bloques futuros quedan bloqueados hasta superar la prueba anterior; su vocabulario sí se puede consultar.
+- Preguntas de reconocimiento variadas: imagen, traducción directa, traducción inversa y artículo.
+- Las actividades ocupan el alto de la pantalla y desactivan el scroll; el feedback queda fijado en la parte inferior.
+- Feedback pedagógico con corrección, género cuando aplica y ejemplo breve.
 - Service worker y manifiesto PWA.
 
 Consulta [ARCHITECTURE.md](./ARCHITECTURE.md) para el modelo de datos y la lógica.
