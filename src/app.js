@@ -31,29 +31,22 @@ const state = {
   images: new Map(),
   storageAvailable: true,
   session: null,
-  checkpoints: {
-    "checkpoint-1": false,
-    "checkpoint-2": false
-  }
+  checkpoints: {}
 };
 
-const CHECKPOINTS = [
-  { id: "checkpoint-1", after: 6, title: "Prueba de nivel 1", icon: "🏁", questionCount: 12 },
-  { id: "checkpoint-2", after: 12, title: "Prueba de nivel 2", icon: "🏆", questionCount: 12 }
-];
-
-const WORD_EXAMPLES = {
-  "saludos-hallo": "Hallo! Wie geht’s?",
-  "saludos-danke": "Danke für deine Hilfe.",
-  "saludos-bitte": "Ein Kaffee, bitte.",
-  "saludos-tschuess": "Tschüss! Bis morgen.",
-  "saludos-guten-morgen": "Guten Morgen, Anna!",
-  "verbos-lernen": "Ich lerne Deutsch.",
-  "verbos-sprechen": "Ich spreche ein bisschen Deutsch.",
-  "verbos-arbeiten": "Ich arbeite in Zürich.",
-  "verbos-gehen": "Ich gehe nach Hause.",
-  "verbos-essen": "Ich esse einen Apfel."
-};
+const BLOCK_SIZE = 6;
+const checkpointCount = Math.ceil(THEMES.length / BLOCK_SIZE);
+const CHECKPOINTS = Array.from({ length: checkpointCount }, (_, index) => {
+  const number = index + 1;
+  const isFinal = number === checkpointCount;
+  return {
+    id: `checkpoint-${number}`,
+    after: Math.min(number * BLOCK_SIZE, THEMES.length),
+    title: isFinal ? "Prueba final A1" : `Prueba de nivel ${number}`,
+    icon: isFinal ? "🎓" : "🏁",
+    questionCount: 12
+  };
+});
 
 const PHASES = ["flashcard", "choice", "typing"];
 
@@ -86,8 +79,7 @@ function blockIndexForTheme(themeId) {
 function themeUnlocked(themeId) {
   const block = blockIndexForTheme(themeId);
   if (block === 0) return true;
-  if (block === 1) return checkpointPassed("checkpoint-1");
-  return checkpointPassed("checkpoint-2");
+  return checkpointPassed(`checkpoint-${block}`);
 }
 
 function checkpointThemes(checkpoint) {
@@ -103,7 +95,7 @@ function fullGerman(word) {
 }
 
 function wordExample(word) {
-  if (WORD_EXAMPLES[word.id]) return WORD_EXAMPLES[word.id];
+  if (word.example) return word.example;
   if (word.article) return `Das ist ${word.article} ${word.german}.`;
   return `${word.german}.`;
 }
@@ -964,7 +956,7 @@ async function continueCheckpoint() {
     state.checkpoints[session.checkpointId] = true;
     session.result = "passed";
     try {
-      await setMeta("checkpoints", state.checkpoints);
+      await setMeta("checkpoints-v2", state.checkpoints);
     } catch (error) {
       state.storageAvailable = false;
       console.warn("Could not persist checkpoint state", error);
@@ -1389,7 +1381,7 @@ async function init() {
     const [progress, images, checkpoints] = await Promise.all([
       getAllProgress(),
       getAllImages(),
-      getMeta("checkpoints", state.checkpoints)
+      getMeta("checkpoints-v2", state.checkpoints)
     ]);
     state.progress = progress;
     state.images = images;
