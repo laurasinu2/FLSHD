@@ -226,3 +226,17 @@ body.activity-mode .app-shell{position:fixed;top:var(--activity-top,0px);left:va
 .tiny-activity.typing-activity .activity-screen{padding-top:4px;padding-bottom:8px}
 @media(max-width:520px){.activity-screen .feedback-dock-inner{grid-template-columns:1fr}}
 @media(min-width:521px){.activity-screen .feedback-dock-inner{grid-template-columns:minmax(0,1fr) minmax(130px,180px)}}
+
+/* Account & sync screen */
+.account-button{border:0;background:#eef2f6;border-radius:999px;padding:5px 8px;font-size:13px;font-weight:900;white-space:nowrap}
+.account-button span{color:#579d04;font-size:10px}
+.account-card{max-width:500px;line-height:1.5}
+.account-card h2{overflow-wrap:anywhere}
+.account-card p{font-size:13px}
+.account-form,.account-actions{display:grid;gap:12px;margin:16px 0}
+.account-form label{display:grid;gap:4px;font-size:12px;font-weight:800}
+.account-form input{width:100%;min-height:46px;font-size:16px;border:1px solid var(--line);border-radius:12px;background:white;padding:10px 12px;color:var(--ink)}
+.account-message,.account-error{overflow-wrap:anywhere}
+.account-error{color:#b14b42}
+.account-card button:disabled{opacity:.55;cursor:wait}
+@media(max-width:400px){.top-stats{gap:3px}.account-button{font-size:11px;padding:4px 6px}}
