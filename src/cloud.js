@@ -70,7 +70,7 @@ async function push() {
   const pending=await pendingCloudRows();
   for(const row of pending){
     const {error}=await client.rpc("flshd_put_record",{
-      p_kind:row.kind,p_record_id:row.record_id,p_payload:row.payload,p_changed_at:row.changed_at
+      p_user_id:activeUser.id,p_kind:row.kind,p_record_id:row.record_id,p_payload:row.payload,p_changed_at:row.changed_at
     });
     if(error) throw error;
     await acknowledgeCloudRow(row);
