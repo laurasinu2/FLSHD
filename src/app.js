@@ -5,7 +5,9 @@ import {
   getAllProgress,
   getAllImages,
   saveProgress,
-  saveWordImage
+  saveWordImage,
+  getMeta,
+  setMeta
 } from "./db.js";
 import {
   dateOnly,
@@ -28,7 +30,29 @@ const state = {
   progress: new Map(),
   images: new Map(),
   storageAvailable: true,
-  session: null
+  session: null,
+  checkpoints: {
+    "checkpoint-1": false,
+    "checkpoint-2": false
+  }
+};
+
+const CHECKPOINTS = [
+  { id: "checkpoint-1", after: 6, title: "Prueba de nivel 1", icon: "🏁", questionCount: 12 },
+  { id: "checkpoint-2", after: 12, title: "Prueba de nivel 2", icon: "🏆", questionCount: 12 }
+];
+
+const WORD_EXAMPLES = {
+  "saludos-hallo": "Hallo! Wie geht’s?",
+  "saludos-danke": "Danke für deine Hilfe.",
+  "saludos-bitte": "Ein Kaffee, bitte.",
+  "saludos-tschuess": "Tschüss! Bis morgen.",
+  "saludos-guten-morgen": "Guten Morgen, Anna!",
+  "verbos-lernen": "Ich lerne Deutsch.",
+  "verbos-sprechen": "Ich spreche ein bisschen Deutsch.",
+  "verbos-arbeiten": "Ich arbeite in Zürich.",
+  "verbos-gehen": "Ich gehe nach Hause.",
+  "verbos-essen": "Ich esse einen Apfel."
 };
 
 const PHASES = ["flashcard", "choice", "typing"];
@@ -41,6 +65,75 @@ function escapeHTML(value) {
 
 function progressFor(wordId) {
   return state.progress.get(wordId) || defaultProgress(wordId);
+}
+
+function checkpointById(id) {
+  return CHECKPOINTS.find(checkpoint => checkpoint.id === id);
+}
+
+function checkpointPassed(id) {
+  return Boolean(state.checkpoints[id]);
+}
+
+function themeIndex(themeId) {
+  return THEMES.findIndex(theme => theme.id === themeId);
+}
+
+function blockIndexForTheme(themeId) {
+  return Math.floor(themeIndex(themeId) / 6);
+}
+
+function themeUnlocked(themeId) {
+  const block = blockIndexForTheme(themeId);
+  if (block === 0) return true;
+  if (block === 1) return checkpointPassed("checkpoint-1");
+  return checkpointPassed("checkpoint-2");
+}
+
+function checkpointThemes(checkpoint) {
+  const start = checkpoint.after - 6;
+  return THEMES.slice(start, checkpoint.after);
+}
+
+function checkpointAvailable(checkpoint) {
+  return checkpointThemes(checkpoint).every(theme => topicProgress(theme.id) === 100);
+}
+
+function fullGerman(word) {
+  return `${word.article ? word.article + " " : ""}${word.german}`;
+}
+
+function wordExample(word) {
+  if (WORD_EXAMPLES[word.id]) return WORD_EXAMPLES[word.id];
+  if (word.article) return `Das ist ${word.article} ${word.german}.`;
+  return `${word.german}.`;
+}
+
+function wordExplanation(word, correct, context = "") {
+  const gender = word.article === "der" ? "masculino" : word.article === "die" ? "femenino" : word.article === "das" ? "neutro" : null;
+  const headline = correct ? "¡Correcto!" : "Respuesta incorrecta";
+  const grammar = gender ? ` Es un sustantivo ${gender} y lleva <b>${word.article}</b>.` : "";
+  const correction = correct
+    ? `<b>${escapeHTML(fullGerman(word))}</b> significa «${escapeHTML(word.spanish)}».`
+    : `La respuesta correcta es <b>${escapeHTML(fullGerman(word))}</b>, «${escapeHTML(word.spanish)}».`;
+  return `<strong>${headline}</strong><span>${correction}${grammar}${context ? " " + context : ""}</span><span class="feedback-example">Ejemplo: <i>${escapeHTML(wordExample(word))}</i></span>`;
+}
+
+function feedbackDock(buttonId, label = "Continuar") {
+  const session = state.session;
+  if (!session?.feedback) return "";
+  return `
+    <aside class="feedback-dock ${session.feedbackTone === "wrong" ? "wrong" : "correct"}" aria-live="polite">
+      <div class="feedback-dock-inner">
+        <div class="feedback-copy">${session.feedback}</div>
+        <button class="btn primary" id="${buttonId}">${label}</button>
+      </div>
+    </aside>
+  `;
+}
+
+function isActivityScreen() {
+  return ["session", "review-session", "checkpoint-session"].includes(state.screen);
 }
 
 async function persist(progress) {
@@ -102,16 +195,18 @@ function syncNav() {
 
 function render() {
   syncNav();
+  document.body.classList.toggle("activity-mode", isActivityScreen());
 
   let content = "";
   if (state.screen === "topic") content = renderTopicIntro();
   else if (state.screen === "session") content = renderLearningSession();
   else if (state.screen === "review-session") content = renderReviewSession();
+  else if (state.screen === "checkpoint-session") content = renderCheckpointSession();
   else if (state.tab === "learn") content = renderHome();
   else if (state.tab === "review") content = renderReviewPage();
   else content = renderProgressPage();
 
-  root.innerHTML = renderTopbar() + content;
+  root.innerHTML = (isActivityScreen() ? "" : renderTopbar()) + content;
   bind();
 }
 
