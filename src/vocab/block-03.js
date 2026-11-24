@@ -1,4 +1,9 @@
-export const BLOCK_03_RAW = `a1-vierzig|act-13|vierzig|cuarenta||||🔢
+export const BLOCK_03_RAW = `a1-achtzehn|act-13|achtzehn|dieciocho||||🔢
+a1-neunzehn|act-13|neunzehn|diecinueve||||🔢
+a1-zwanzig|act-13|zwanzig|veinte||||🔢
+a1-einundzwanzig|act-13|einundzwanzig|veintiuno||||🔢
+a1-dreiig|act-13|dreißig|treinta||||🔢
+a1-vierzig|act-13|vierzig|cuarenta||||🔢
 a1-funfzig|act-13|fünfzig|cincuenta||||🔢
 a1-sechzig|act-13|sechzig|sesenta||||🔢
 a1-siebzig|act-13|siebzig|setenta||||🔢
@@ -10,16 +15,16 @@ a1-zweihundert|act-13|zweihundert|doscientos||||🔢
 a1-ein-tausend|act-13|(ein)tausend|mil||||🔢
 a1-million|act-13|Million|millón|die|||🔢
 a1-milliarde|act-13|Milliarde|mil millones|die|||🔢
-a1-erste|act-13|erste|primero||||🔢
-a1-zweite|act-13|zweite|segundo||||🔢
-a1-dritte|act-13|dritte|tercero||||🔢
-a1-vierte|act-13|vierte|cuarto||||🔢
-a1-halb|act-13|halb|medio / mitad||||🔢
-a1-viertel|act-13|Viertel|cuarto|das|||🔢
-a1-euro|act-13|Euro|euro||||🔢
-a1-cent|act-13|Cent|céntimo||||🔢
-a1-meter|act-13|Meter|metro||||🔢
-a1-zentimeter|act-13|Zentimeter|centímetro||||🔢
+a1-erste|act-14|erste|primero||||🔢
+a1-zweite|act-14|zweite|segundo||||🔢
+a1-dritte|act-14|dritte|tercero||||🔢
+a1-vierte|act-14|vierte|cuarto||||🔢
+a1-halb|act-14|halb|medio / mitad||||🔢
+a1-viertel|act-14|Viertel|cuarto|das|||🔢
+a1-euro|act-14|Euro|euro||||🔢
+a1-cent|act-14|Cent|céntimo||||🔢
+a1-meter|act-14|Meter|metro||||🔢
+a1-zentimeter|act-14|Zentimeter|centímetro||||🔢
 a1-quadratmeter|act-14|Quadratmeter|metro cuadrado||||🔢
 a1-prozent|act-14|Prozent|por ciento||||🔢
 a1-liter|act-14|Liter|litro||||🔢
@@ -42,12 +47,12 @@ a1-wochentag|act-15|Wochentag|día de la semana|der|||📅
 a1-sonntag|act-15|Sonntag|domingo|der|||📅
 a1-montag|act-15|Montag|lunes|der|||📅
 a1-dienstag|act-15|Dienstag|martes|der|||📅
-a1-mittwoch|act-15|Mittwoch|miércoles|der|||📅
-a1-donnerstag|act-15|Donnerstag|jueves|der|||📅
-a1-freitag|act-15|Freitag|viernes|der|||📅
-a1-samstag|act-15|Samstag|sábado|der|||📅
-a1-sonnabend|act-15|Sonnabend|sábado|der|||📅
-a1-wochenende|act-15|Wochenende|fin de semana|das|||📅
+a1-mittwoch|act-16|Mittwoch|miércoles|der|||📅
+a1-donnerstag|act-16|Donnerstag|jueves|der|||📅
+a1-freitag|act-16|Freitag|viernes|der|||📅
+a1-samstag|act-16|Samstag|sábado|der|||📅
+a1-sonnabend|act-16|Sonnabend|sábado|der|||📅
+a1-wochenende|act-16|Wochenende|fin de semana|das|||📅
 a1-tag|act-16|Tag|día|der|||📅
 a1-morgen-wg55|act-16|Morgen|mañana (parte del día)|der|||📅
 a1-vormittag|act-16|Vormittag|mañana / antes del mediodía|der|||📅
@@ -57,19 +62,19 @@ a1-abend|act-16|Abend|tarde-noche|der|||📅
 a1-nacht|act-16|Nacht|noche|die|||📅
 a1-januar|act-16|Januar|enero|der|||📅
 a1-februar|act-16|Februar|febrero|der|||📅
-a1-marz|act-16|März|marzo|der|||📅
-a1-april|act-16|April|abril|der|||📅
-a1-mai|act-16|Mai|mayo|der|||📅
-a1-juni|act-16|Juni|junio|der|||📅
-a1-juli|act-16|Juli|julio|der|||📅
-a1-august|act-16|August|agosto|der|||📅
-a1-september|act-16|September|septiembre|der|||📅
-a1-oktober|act-16|Oktober|octubre|der|||📅
-a1-november|act-16|November|noviembre|der|||📅
-a1-dezember|act-16|Dezember|diciembre|der|||📅
-a1-fruhling|act-16|Frühling|primavera|der|||📅
-a1-fruhjahr|act-16|Frühjahr|primavera|das|||📅
-a1-sommer|act-16|Sommer|verano|der|||📅
+a1-marz|act-17|März|marzo|der|||📅
+a1-april|act-17|April|abril|der|||📅
+a1-mai|act-17|Mai|mayo|der|||📅
+a1-juni|act-17|Juni|junio|der|||📅
+a1-juli|act-17|Juli|julio|der|||📅
+a1-august|act-17|August|agosto|der|||📅
+a1-september|act-17|September|septiembre|der|||📅
+a1-oktober|act-17|Oktober|octubre|der|||📅
+a1-november|act-17|November|noviembre|der|||📅
+a1-dezember|act-17|Dezember|diciembre|der|||📅
+a1-fruhling|act-17|Frühling|primavera|der|||📅
+a1-fruhjahr|act-17|Frühjahr|primavera|das|||📅
+a1-sommer|act-17|Sommer|verano|der|||📅
 a1-herbst|act-17|Herbst|otoño|der|||📅
 a1-winter|act-17|Winter|invierno|der|||📅
 a1-norden|act-18|Norden|norte|der|||🧭
