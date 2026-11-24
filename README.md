@@ -9,10 +9,10 @@ La aplicación ya está separada en módulos y funciona como PWA estática.
 Implementado:
 
 - Pantalla principal tipo camino de aprendizaje.
-- 16 temas ordenados de arriba abajo.
+- 48 actividades ordenadas de arriba abajo, agrupadas en 8 bloques de 6.
 - Máximo de 3 nodos por fila en móvil y 4 en escritorio.
 - Anillo circular de progreso por tema.
-- 80 palabras iniciales con ID estable, tema, traducción y artículo.
+- 800 tarjetas A1 distintas con ID estable, actividad, traducción, artículo, plural cuando corresponde y ejemplo cuando lo aporta la fuente.
 - Entrada a cada tema con explicación de las 3 fases.
 - Flashcards con fotografía/cámara.
 - Relación explícita `wordId ↔ imageId` en IndexedDB.
@@ -29,7 +29,7 @@ Implementado:
 - Tras un fallo: repaso en 1–2 días y reinicio de la escalera.
 - Priorización por retraso y fallos de los últimos 7 días.
 - Pestañas Aprender, Repasar y Progreso.
-- Pruebas de nivel después de cada bloque de 6 temas, disponibles desde el principio aunque todavía no hayas estudiado esos temas.
+- 8 pruebas: una tras cada bloque de 6 actividades, disponibles desde el principio aunque todavía no hayas estudiado el bloque.
 - Las pruebas de nivel exigen 0 errores; un fallo termina el intento, pero no hay límite de reintentos.
 - Aprobar la prueba es lo único que desbloquea el siguiente bloque; los temas futuros permiten consultar su vocabulario.
 - Preguntas de reconocimiento variadas: imagen, traducción directa, traducción inversa y artículo.
@@ -61,6 +61,6 @@ Al cambiar versiones puede ser necesario recargar una vez la página para que el
 
 ## Datos
 
-Actualmente hay 80 palabras de funcionamiento inicial. La arquitectura está preparada para ampliar `src/data.js` al vocabulario A1 completo sin cambiar la base de datos ni las pantallas.
+El currículo A1 completo está repartido en 48 actividades y 800 tarjetas distintas. Consulta [CURRICULUM.md](./CURRICULUM.md) para ver los 8 bloques y el criterio de transformación de la Wortliste.
 
 Las fotos y el progreso se almacenan localmente. Borrar los datos del sitio elimina ambos.
