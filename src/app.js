@@ -107,7 +107,7 @@ function wordExplanation(word, correct, context = "") {
   const correction = correct
     ? `<b>${escapeHTML(fullGerman(word))}</b> significa «${escapeHTML(word.spanish)}».`
     : `La respuesta correcta es <b>${escapeHTML(fullGerman(word))}</b>, «${escapeHTML(word.spanish)}».`;
-  return `<strong>${headline}</strong><span>${correction}${grammar}${context ? " " + context : ""}</span><span class="feedback-example">Ejemplo: <i>${escapeHTML(wordExample(word))}</i></span>`;
+  return `<strong>${headline}</strong><span>${correction}${grammar}${context ? " " + context : ""}</span><span class="feedback-example">Ejemplo: <i>${escapeHTML(wordExample(word).match(/^[\s\S]*?[.!?](?=\s|$)/)?.[0] || wordExample(word))}</i></span>`;
 }
 
 function feedbackDock(buttonId, label = "Continuar") {
@@ -184,6 +184,39 @@ function syncNav() {
   reviewBadge.classList.toggle("hidden", due === 0);
 }
 
+// Use the actually visible viewport, including Safari's changing browser chrome
+// and the on-screen keyboard, rather than the layout viewport.
+function syncActivityViewport() {
+  if (!isActivityScreen()) return;
+  const viewport = window.visualViewport;
+  const height = Math.floor(viewport?.height || window.innerHeight);
+  const width = Math.floor(viewport?.width || window.innerWidth);
+  root.style.setProperty("--activity-height", height + "px");
+  root.style.setProperty("--activity-width", width + "px");
+  root.style.setProperty("--activity-top", (viewport?.offsetTop || 0) + "px");
+  root.style.setProperty("--activity-left", (viewport?.offsetLeft || 0) + "px");
+  root.classList.toggle("short-activity", height < 560);
+  root.classList.toggle("tiny-activity", height < 380);
+  root.classList.toggle("typing-activity", Boolean(root.querySelector(".answer-input:not(:disabled)")));
+}
+
+function layoutActivity() {
+  const active = isActivityScreen();
+  document.documentElement.classList.toggle("activity-mode", active);
+  if (!active) return;
+  const screen = root.querySelector(".activity-screen");
+  if (!screen) return;
+  // Place actions and feedback in the actual bottom row, not relative to a
+  // potentially larger browser viewport. Keep their event IDs unchanged.
+  const dock = screen.querySelector(".feedback-dock, .activity-actions");
+  if (dock && dock.parentElement !== screen) screen.appendChild(dock);
+  syncActivityViewport();
+}
+
+window.addEventListener("resize", syncActivityViewport);
+window.visualViewport?.addEventListener("resize", syncActivityViewport);
+window.visualViewport?.addEventListener("scroll", syncActivityViewport);
+
 function render() {
   syncNav();
   document.body.classList.toggle("activity-mode", isActivityScreen());
@@ -198,6 +231,7 @@ function render() {
   else content = renderProgressPage();
 
   root.innerHTML = (isActivityScreen() ? "" : renderTopbar()) + content;
+  layoutActivity();
   bind();
 }
 
