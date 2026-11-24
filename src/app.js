@@ -486,13 +486,12 @@ function renderFlashcard(word) {
       <p class="translation">${escapeHTML(word.spanish)}</p>
     </article>
 
-    <div class="action-row">
+    <div class="activity-actions split">
       <button class="btn danger" id="didntKnow">← No la sabía</button>
       <button class="btn primary" id="knewIt">Me la sé →</button>
     </div>
   `;
 }
-
 function optionCandidates(word) {
   const sameTheme = topicWords(word.themeId).filter(candidate => candidate.id !== word.id);
   const widerPool = WORDS.filter(candidate => candidate.id !== word.id && candidate.themeId !== word.themeId);
@@ -717,12 +716,13 @@ function resetQuestionState() {
   session.articleRevealed = false;
   session.answered = false;
   session.feedback = null;
+  session.feedbackTone = null;
   session.selected = null;
   session.options = null;
   session.optionWordId = null;
+  session.correctChoice = null;
   session.questionKind = null;
 }
-
 function nextLearningItem() {
   state.session.index += 1;
   resetQuestionState();
@@ -1047,67 +1047,70 @@ function renderReviewSession() {
 
   if (!word) {
     return `
-      <div class="celebrate">
-        <div class="emoji">🧠✨</div>
-        <h2>Repaso terminado</h2>
-        <p>Has vaciado la cola de hoy.</p>
-        <button class="btn primary" id="finishReview">Volver</button>
-      </div>
+      <section class="activity-screen activity-complete">
+        <div class="celebrate">
+          <div class="emoji">🧠✨</div>
+          <h2>Repaso terminado</h2>
+          <p>Has vaciado la cola de hoy.</p>
+          <button class="btn primary" id="finishReview">Volver</button>
+        </div>
+      </section>
     `;
   }
 
-  const typed = session.index % 2 === 1;
+  const typed = session.index % 3 === 1;
+  const reverse = session.index % 3 === 2;
 
   let body;
   if (typed) {
     body = `
-      <section class="question-card">
+      <section class="question-card compact-question">
         <h2>¿Cómo se llama en alemán?</h2>
         ${imageMarkup(word, "question-photo")}
         <p class="translation">${escapeHTML(word.spanish)}</p>
         <input id="reviewTyping" class="answer-input" autocomplete="off" autocapitalize="off" spellcheck="false"
           placeholder="Escribe la palabra…" ${session.answered ? "disabled" : ""}>
       </section>
-      ${session.feedback ? `<div class="feedback">${session.feedback}</div>` : ""}
-      <div class="action-row">
-        ${session.answered ? '<button class="btn primary" id="continueReview">Continuar</button>' : '<button class="btn primary" id="checkReviewTyping">Comprobar</button>'}
-      </div>
+      ${session.answered
+        ? feedbackDock("continueReview")
+        : '<div class="activity-actions"><button class="btn primary" id="checkReviewTyping">Comprobar</button></div>'}
     `;
   } else {
     if (!session.options || session.optionWordId !== word.id) {
-      session.options = optionCandidates(word).map(item => item.id);
+      const candidates = optionCandidates(word);
+      session.options = candidates.map(item => ({ value:item.id, label: reverse ? item.spanish : item.german }));
+      session.correctChoice = word.id;
       session.optionWordId = word.id;
     }
     body = `
-      <section class="question-card">
-        <h2>Elige el nombre correcto</h2>
-        ${imageMarkup(word, "question-photo")}
-        <p class="translation">${escapeHTML(word.spanish)}</p>
+      <section class="question-card compact-question">
+        <h2>${reverse ? "¿Qué significa esta palabra?" : "Elige el nombre correcto"}</h2>
+        ${reverse ? `<div class="prompt">${escapeHTML(word.german)}</div>` : imageMarkup(word, "question-photo")}
       </section>
       <div class="options-grid">
-        ${session.options.map(id => {
-          const option = wordById(id);
+        ${session.options.map(option => {
           let cls = "";
-          if (session.answered && option.id === word.id) cls = "correct";
-          if (session.answered && option.id === session.selected && option.id !== word.id) cls = "wrong";
-          return `<button class="option ${cls}" data-review-option="${id}" ${session.answered ? "disabled" : ""}>${escapeHTML(option.german)}</button>`;
+          if (session.answered && option.value === session.correctChoice) cls = "correct";
+          if (session.answered && option.value === session.selected && option.value !== session.correctChoice) cls = "wrong";
+          return `<button class="option ${cls}" data-review-option="${option.value}" ${session.answered ? "disabled" : ""}>${escapeHTML(option.label)}</button>`;
         }).join("")}
       </div>
-      ${session.feedback ? `<div class="feedback">${session.feedback}</div><div class="action-row"><button class="btn primary" id="continueReview">Continuar</button></div>` : ""}
+      ${feedbackDock("continueReview")}
     `;
   }
 
   return `
-    <section class="page-head">
-      <button class="back-btn" id="leaveReview">←</button>
-      <div><h1>🧠 Repaso</h1><p>Los errores de la última semana aumentan la prioridad.</p></div>
+    <section class="activity-screen">
+      <header class="activity-header">
+        <button class="back-btn" id="leaveReview">←</button>
+        <div class="activity-title"><b>🧠 Repaso</b><small>Errores recientes = más prioridad</small></div>
+        <span class="activity-count">${session.index + 1} / ${session.queue.length}</span>
+      </header>
+      <div class="session-progress"><div style="width:${Math.round(session.index / session.queue.length * 100)}%"></div></div>
+      <main class="activity-main">${body}</main>
     </section>
-    <div class="session-progress"><div style="width:${Math.round(session.index / session.queue.length * 100)}%"></div></div>
-    <div class="session-count">${session.index + 1} / ${session.queue.length}</div>
-    ${body}
   `;
 }
-
 async function reviewResult(correct) {
   const word = wordById(state.session.queue[state.session.index]);
   let p = progressFor(word.id);
@@ -1115,19 +1118,19 @@ async function reviewResult(correct) {
 
   if (correct) {
     p = scheduleReviewSuccess(p, now);
-    state.session.feedback = "✅ Bien. El siguiente repaso queda programado automáticamente.";
+    state.session.feedbackTone = "correct";
+    state.session.feedback = wordExplanation(word, true, "El siguiente repaso queda programado automáticamente.");
   } else {
     p = scheduleFailure(p, now);
-    // Repeat again in the same session, after other pending cards.
     state.session.queue.push(word.id);
-    state.session.feedback = `❌ Era <b>${escapeHTML(word.article ? word.article + " " : "")}${escapeHTML(word.german)}</b>. La volverás a ver hoy y pronto otra vez.`;
+    state.session.feedbackTone = "wrong";
+    state.session.feedback = wordExplanation(word, false, "La volverás a ver al final de esta sesión y pronto otra vez.");
   }
 
   state.session.answered = true;
   await persist(p);
   render();
 }
-
 function continueReview() {
   state.session.index += 1;
   state.session.answered = false;
