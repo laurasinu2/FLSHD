@@ -1,38 +1,60 @@
 # FLSHD 🇩🇪
 
-Prototipo web para aprender vocabulario alemán A1 mediante tus propias fotografías, tarjetas y repetición espaciada.
+App visual para aprender vocabulario alemán con tus propias fotografías, tres etapas de aprendizaje y repetición espaciada.
 
-## Estado de desarrollo
+## Estado actual
 
-**Parte 1: pantalla principal y navegación** implementada: portada adaptable con 3 temas por fila en móvil y 4 en ordenador, ilustraciones temáticas (emoji), anillo circular de progreso, orden vertical, estados por tema, panel resumen, accesos directos y pestañas inferiores. El progreso se deriva de los estados individuales de las palabras. Pruebas básicas de renderizado y navegación realizadas en un entorno simulado; queda comprobar en dispositivos reales.
+La aplicación ya está separada en módulos y funciona como PWA estática.
 
-## Funcionalidades implementadas
-- Portada móvil con **16 temas**, hasta **3 círculos por fila** y progreso alrededor.
-- **80 palabras iniciales de demostración**, cada una con un identificador estable `tema-número`, traducción, artículo y emoji.
-- En cada flashcard puedes **hacer una foto o subir una imagen**. Se comprime antes de guardarse, y se asocia a la palabra.
-- Tocar la tarjeta revela la palabra; deslizamiento derecha/izquierda o botones para indicar si la conocías.
-- Punto de color del artículo: **der = azul, die = rosa, das = verde**; el artículo se revela tocando el punto.
-- Fase 2: reconocimiento por **cuatro opciones**, alternando traducción y fotografía.
-- Fase 3: **escribir la respuesta** mostrada en imagen, ignorando mayúsculas/minúsculas; se pide el sustantivo sin artículo.
-- Una palabra se considera aprendida al superar las tres fases; los fallos reinician su progresión.
-- Pestaña de repaso con intervalos **3, 7, 14, 30, 60, 120, 240 días** tras los aciertos y **1 día** tras un error.
-- Prioridad de repaso calculada con retraso acumulado y fallos de los últimos siete días.
-- Fechas del último éxito, fallo, aprendizaje y vencimiento, además del historial reciente de fallos.
+Implementado:
 
-## Cómo usar
-Abre `index.html` en un servidor web estático, por ejemplo con `python3 -m http.server 8000` desde la carpeta del repositorio, y entra en `http://localhost:8000`. También puede publicarse en GitHub Pages (Settings → Pages → Deploy from a branch → main / root).
+- Pantalla principal tipo camino de aprendizaje.
+- 16 temas ordenados de arriba abajo.
+- Máximo de 3 nodos por fila en móvil y 4 en escritorio.
+- Anillo circular de progreso por tema.
+- 80 palabras iniciales con ID estable, tema, traducción y artículo.
+- Entrada a cada tema con explicación de las 3 fases.
+- Flashcards con fotografía/cámara.
+- Relación explícita `wordId ↔ imageId` en IndexedDB.
+- Tap para revelar la palabra.
+- Swipe derecha = “me la sé”.
+- Swipe izquierda = “no la sabía”.
+- Punto de artículo: der azul, die rosa, das verde; el texto se revela al tocar.
+- Fase de 4 opciones, alternando significado y fotografía.
+- Fase de escritura con comparación sin distinguir mayúsculas/minúsculas.
+- Una palabra solo se aprende tras una secuencia limpia de las 3 fases.
+- Fechas de aprendizaje, último acierto, último fallo y próximo repaso.
+- Historial de errores.
+- Repasos a 3, 7, 14, 30, 60, 120 y 240 días.
+- Tras un fallo: repaso en 1–2 días y reinicio de la escalera.
+- Priorización por retraso y fallos de los últimos 7 días.
+- Pestañas Aprender, Repasar y Progreso.
+- Service worker y manifiesto PWA.
 
-En móvil, abre la dirección publicada por HTTPS y usa «Añadir a pantalla de inicio» para un acceso directo. No se ha implementado todavía un service worker ni soporte offline completo.
+Consulta [ARCHITECTURE.md](./ARCHITECTURE.md) para el modelo de datos y la lógica.
 
-## Persistencia y privacidad
-La app usa **IndexedDB del navegador**: almacenes `records` (estado por palabra) y `photos` (imagen comprimida asociada al ID de la palabra). Las fotos **no salen del dispositivo**. No hay servidor, cuenta, autenticación ni sincronización. Si borras los datos del sitio o cambias de navegador/dispositivo, perderás el progreso y las fotos. No utilices modo incógnito.
+## Ejecutar en local
 
-## Pendiente para una versión completa
-- Importar y revisar **todo el vocabulario de la lista A1 del Goethe**, no solo estas 80 palabras de ejemplo, y añadir plural y ejemplos.
-- Soportar cuentas, base de datos sincronizada, almacenamiento seguro de imágenes y exportación/copia de seguridad.
-- Mejorar la planificación del repaso con un algoritmo adaptativo como FSRS y validación de tasa de recuerdo, frente a los intervalos fijos actuales.
-- Añadir pruebas automatizadas, accesibilidad ampliada, feedback de rendimiento y despliegue automatizado.
-- Añadir evaluación del artículo y plural; por ahora **el artículo no se evalúa** en la fase de escritura.
-- Fotos por defecto para los objetos sin imagen subida; ahora se muestra un emoji.
+Los módulos ES necesitan un servidor HTTP. Desde el repositorio:
 
-Este proyecto usa un diseño original inspirado en el patrón visual de caminos de aprendizaje, sin copiar recursos gráficos de otras marcas.
+```bash
+python3 -m http.server 8000
+```
+
+Después abre:
+
+```
+http://localhost:8000
+```
+
+## GitHub Pages
+
+Publica la rama `main` desde la raíz del repositorio en Settings → Pages.
+
+Al cambiar versiones puede ser necesario recargar una vez la página para que el service worker sustituya la caché anterior.
+
+## Datos
+
+Actualmente hay 80 palabras de funcionamiento inicial. La arquitectura está preparada para ampliar `src/data.js` al vocabulario A1 completo sin cambiar la base de datos ni las pantallas.
+
+Las fotos y el progreso se almacenan localmente. Borrar los datos del sitio elimina ambos.
