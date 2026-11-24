@@ -1135,9 +1135,11 @@ function continueReview() {
   state.session.index += 1;
   state.session.answered = false;
   state.session.feedback = null;
+  state.session.feedbackTone = null;
   state.session.selected = null;
   state.session.options = null;
   state.session.optionWordId = null;
+  state.session.correctChoice = null;
   render();
 }
 
@@ -1201,9 +1203,14 @@ function bind() {
     });
   });
 
+  document.querySelectorAll("[data-checkpoint]").forEach(button => {
+    button.addEventListener("click", () => startCheckpoint(button.dataset.checkpoint));
+  });
+
   document.querySelector("#continueLearning")?.addEventListener("click", () => {
-    const theme = THEMES.find(item => topicProgress(item.id) > 0 && topicProgress(item.id) < 100)
-      || THEMES.find(item => topicProgress(item.id) < 100)
+    const theme = THEMES.find(item => themeUnlocked(item.id) && topicProgress(item.id) > 0 && topicProgress(item.id) < 100)
+      || THEMES.find(item => themeUnlocked(item.id) && topicProgress(item.id) < 100)
+      || THEMES.find(item => themeUnlocked(item.id))
       || THEMES[0];
     state.topicId = theme.id;
     state.screen = "topic";
@@ -1212,7 +1219,9 @@ function bind() {
 
   document.querySelector("#openReview")?.addEventListener("click", () => navigateTab("review"));
   document.querySelector("#backHome")?.addEventListener("click", () => navigateTab("learn"));
-  document.querySelector("#startTopic")?.addEventListener("click", () => startTopic(state.topicId));
+  document.querySelector("#startTopic")?.addEventListener("click", () => {
+    if (themeUnlocked(state.topicId)) startTopic(state.topicId);
+  });
   document.querySelector("#finishTopic")?.addEventListener("click", () => navigateTab("learn"));
   document.querySelector("#leaveSession")?.addEventListener("click", () => {
     state.screen = "topic";
@@ -1241,6 +1250,17 @@ function bind() {
     if (event.key === "Enter") checkReviewTyping();
   });
   document.querySelector("#continueReview")?.addEventListener("click", continueReview);
+
+  document.querySelectorAll("[data-checkpoint-option]").forEach(button => {
+    button.addEventListener("click", () => checkpointChoiceResult(button.dataset.checkpointOption));
+  });
+  document.querySelector("#checkCheckpointTyping")?.addEventListener("click", checkpointTypingResult);
+  document.querySelector("#checkpointTyping")?.addEventListener("keydown", event => {
+    if (event.key === "Enter") checkpointTypingResult();
+  });
+  document.querySelector("#continueCheckpoint")?.addEventListener("click", continueCheckpoint);
+  document.querySelector("#retryCheckpoint")?.addEventListener("click", () => startCheckpoint(state.session.checkpointId));
+  document.querySelector("#exitCheckpoint")?.addEventListener("click", () => navigateTab("learn"));
 }
 
 function bindQuestions() {
@@ -1386,9 +1406,14 @@ for (const button of navButtons) {
 async function init() {
   try {
     await seedWords(WORDS);
-    const [progress, images] = await Promise.all([getAllProgress(), getAllImages()]);
+    const [progress, images, checkpoints] = await Promise.all([
+      getAllProgress(),
+      getAllImages(),
+      getMeta("checkpoints", state.checkpoints)
+    ]);
     state.progress = progress;
     state.images = images;
+    state.checkpoints = { ...state.checkpoints, ...(checkpoints || {}) };
   } catch (error) {
     state.storageAvailable = false;
     console.warn("FLSHD is running without persistent storage.", error);
