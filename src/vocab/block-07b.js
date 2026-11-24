@@ -47,7 +47,6 @@ a1-scheinen|act-42|scheinen|brillar / parecer|||Die Sonne scheint.|🏃
 a1-schlafen|act-42|schlafen|dormir|||Ich schlafe meistens acht Stunden.|🏃
 a1-sehen|act-42|sehen|ver|||Ich kann dich nicht sehen. Ich habe diesen Jungen schon einmal gesehen.|🏃
 a1-sein|act-42|sein|ser / estar|||Herr Müller ist in seinem Zimmer. Mir ist kalt. Ich bin dreiundzwanzig.|🏃
-a1-an-sein-538|act-42|an sein|estar encendido|||Das Licht ist noch an.|🏃
 a1-weg-sein|act-42|weg sein|estar fuera / haberse ido|||Herr Meier ist schon weg.|🏃
 a1-zu-sein|act-42|zu sein|estar cerrado|||Die Tür ist zu.|🏃
 a1-seit|act-42|seit|desde / desde hace|||Ich wohne seit drei Jahren in Köln.|🏃
