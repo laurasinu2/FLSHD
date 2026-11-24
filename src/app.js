@@ -7,8 +7,11 @@ import {
   saveProgress,
   saveWordImage,
   getMeta,
-  setMeta
+  setMeta,
+  configureLocalAccount,
+  importGuestData
 } from "./db.js";
+import { cloudConfigured, cloudReady, initializeCloud, signIn, signUp, signOut, synchronize, queueCloudSync } from "./cloud.js";
 import {
   dateOnly,
   errorsInLastDays,
@@ -31,7 +34,12 @@ const state = {
   images: new Map(),
   storageAvailable: true,
   session: null,
-  checkpoints: {}
+  checkpoints: {},
+  account: null,
+  cloudStatus: "local",
+  cloudError: "",
+  accountBusy: false,
+  booting: true
 };
 
 const BLOCK_SIZE = 6;
@@ -169,6 +177,7 @@ function renderTopbar() {
       <div class="top-stats">
         <span class="stat-pill">⭐ ${learnedCount()} / ${WORDS.length}</span>
         <span class="stat-pill">🧠 ${dueWords().length} por repasar</span>
+        <button type="button" id="openAccount" class="account-button" aria-label="Cuenta" title="Cuenta y sincronización">👤 <span id="cloudIndicator">${state.account ? (state.cloudStatus==="synced"?"✓":"…") : ""}</span></button>
       </div>
     </header>
   `;
@@ -222,7 +231,8 @@ function render() {
   document.body.classList.toggle("activity-mode", isActivityScreen());
 
   let content = "";
-  if (state.screen === "topic") content = renderTopicIntro();
+  if (state.screen === "account") content = renderAccount();
+  else if (state.screen === "topic") content = renderTopicIntro();
   else if (state.screen === "session") content = renderLearningSession();
   else if (state.screen === "review-session") content = renderReviewSession();
   else if (state.screen === "checkpoint-session") content = renderCheckpointSession();
@@ -1221,6 +1231,7 @@ function renderProgressPage() {
 }
 
 function navigateTab(tab) {
+  if(state.booting || state.accountBusy) return;
   state.tab = tab;
   state.topicId = null;
   state.session = null;
@@ -1229,6 +1240,8 @@ function navigateTab(tab) {
 }
 
 function bind() {
+  document.querySelector("#openAccount")?.addEventListener("click",()=>{state.screen="account";render();});
+  bindAccount();
   document.querySelectorAll("[data-topic]").forEach(button => {
     button.addEventListener("click", () => {
       state.topicId = button.dataset.topic;
@@ -1418,7 +1431,18 @@ function compressImage(file) {
         canvas.height = Math.max(1, Math.round(image.height * scale));
         const ctx = canvas.getContext("2d");
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL("image/jpeg", .8));
+        let encoded=canvas.toDataURL("image/jpeg",.78);
+        for(let attempt=0;encoded.length>430000&&attempt<6;attempt++){
+          const reduced=document.createElement("canvas");
+          reduced.width=Math.max(1,Math.round(canvas.width*.75));
+          reduced.height=Math.max(1,Math.round(canvas.height*.75));
+          reduced.getContext("2d").drawImage(canvas,0,0,reduced.width,reduced.height);
+          canvas.width=reduced.width;canvas.height=reduced.height;
+          canvas.getContext("2d").drawImage(reduced,0,0);
+          encoded=canvas.toDataURL("image/jpeg",.72);
+        }
+        if(encoded.length>430000){reject(new Error("La fotografía es demasiado grande"));return;}
+        resolve(encoded);
       };
       image.src = reader.result;
     };
@@ -1437,27 +1461,115 @@ for (const button of navButtons) {
   button.addEventListener("click", () => navigateTab(button.dataset.tab));
 }
 
+
+function cloudStatusText() {
+  if(!cloudConfigured) return "Base de datos local · Supabase pendiente de configurar";
+  if(!cloudReady()) return "No se pudo conectar con Supabase";
+  if(!state.account) return "Modo invitado · datos en este navegador";
+  return ({syncing:"Sincronizando…",synced:"Cambios enviados a la nube",pending:"Cambios pendientes de sincronizar",local:"Datos locales"})[state.cloudStatus] || "Datos locales";
+}
+function reportCloud(status,error) {
+  state.cloudStatus=status;
+  state.cloudError=error ? "No se ha podido sincronizar. Tus cambios guardados localmente se conservan para reintentar." : "";
+  const badge=document.querySelector("#cloudIndicator");
+  if(badge) badge.textContent=state.account?(status==="synced"?"✓":status==="pending"?"!":"…"):"";
+  const line=document.querySelector("#cloudStatus");
+  if(line) line.textContent=cloudStatusText();
+  const detail=document.querySelector("#cloudError");
+  if(detail) detail.textContent=state.cloudError;
+}
+function renderAccount(){
+  const user=state.account;
+  return `
+    <section class="page-head"><button class="back-btn" id="backHome" aria-label="Volver">←</button><div><h1>Mi cuenta</h1><p>Tu alemán, en tus dispositivos</p></div></section>
+    <section class="review-card account-card">
+      <h2>${user ? escapeHTML(user.email || "Mi cuenta") : "Inicia sesión"}</h2>
+      <p id="cloudStatus" class="muted small">${escapeHTML(cloudStatusText())}</p>
+      <p id="cloudError" class="account-error" role="status">${escapeHTML(state.cloudError)}</p>
+      ${!cloudConfigured ? '<p>El acceso con cuenta se activará cuando esté configurado el proyecto Supabase. Puedes seguir estudiando en modo local.</p>' : !cloudReady() ? '<button class="btn secondary" id="retryCloud">Reintentar conexión</button>' : user ? `
+        <p>Fotos, palabras, errores, fechas de repaso y pruebas superadas pertenecen a esta cuenta.</p>
+        <div class="account-actions">
+          <button class="btn primary" id="syncAccount">Sincronizar ahora</button>
+          <button class="btn secondary" id="importGuest">Importar mis datos anteriores</button>
+          <button class="btn secondary" id="signOut">Cerrar sesión</button>
+        </div>
+        <p class="small muted">Cerrar sesión no borra tus datos. Si hay cambios pendientes, primero debes sincronizarlos.</p>
+      ` : `
+        <form id="authForm" class="account-form">
+          <label>Correo electrónico<input name="email" type="email" autocomplete="email" required></label>
+          <label>Contraseña<input name="password" type="password" autocomplete="current-password" minlength="6" required></label>
+          <button type="submit" class="btn primary">Iniciar sesión</button>
+          <button type="button" id="signUp" class="btn secondary">Crear cuenta</button>
+        </form>
+        <p class="small muted">Puedes seguir como invitado. Al crear una cuenta podrás importar tus datos locales desde este navegador.</p>
+      `}
+      <p id="accountMessage" role="status" class="account-message"></p>
+    </section>`;
+}
+async function loadLocalState(){
+  const [progress, images, checkpoints]=await Promise.all([getAllProgress(),getAllImages(),getMeta("checkpoints-v3",{})]);
+  state.progress=progress;
+  state.images=images;
+  state.checkpoints={...(checkpoints||{})};
+}
+function bindAccount(){
+  const form=document.querySelector("#authForm");
+  const message=document.querySelector("#accountMessage");
+  async function run(fn){
+    if(state.accountBusy)return;
+    state.accountBusy=true;
+    const controls=[...document.querySelectorAll(".account-card button,.account-card input,#backHome,#openAccount")];
+    controls.forEach(el=>el.disabled=true);
+    if(message)message.textContent="Procesando…";
+    try{const result=await fn();if(message)message.textContent=result||"";}
+    catch(error){if(message)message.textContent="No se pudo completar: "+(error?.message||"Revisa la conexión e inténtalo de nuevo.");}
+    finally{state.accountBusy=false;controls.forEach(el=>el.disabled=false);}
+  }
+  const credentials=()=>({email:form.elements.email.value.trim(),password:form.elements.password.value});
+  form?.addEventListener("submit",event=>{event.preventDefault();const c=credentials();run(()=>signIn(c.email,c.password));});
+  document.querySelector("#signUp")?.addEventListener("click",()=>{
+    if(!form.reportValidity())return;const c=credentials();
+    run(async()=>{const immediate=await signUp(c.email,c.password);return immediate?"Cuenta creada.":"Revisa tu correo para confirmar la cuenta y después inicia sesión.";});
+  });
+  document.querySelector("#retryCloud")?.addEventListener("click",()=>location.reload());
+  document.querySelector("#syncAccount")?.addEventListener("click",()=>run(async()=>{
+    await synchronize(true);await loadLocalState();return "Sincronización completada.";
+  }));
+  document.querySelector("#signOut")?.addEventListener("click",()=>run(()=>signOut()));
+  document.querySelector("#importGuest")?.addEventListener("click",()=>{
+    if(!window.confirm("¿Copiar las fotos y el progreso del modo invitado de este navegador a tu cuenta? No se borrará el original."))return;
+    run(async()=>{
+      await synchronize(true);
+      const count=await importGuestData(new Set(WORDS.map(w=>w.id)));
+      await loadLocalState();
+      await synchronize(true);await loadLocalState();
+      return count+" registros locales importados y sincronizados.";
+    });
+  });
+}
+
 async function init() {
   try {
+    state.account=await initializeCloud(reportCloud);
+  } catch(error) {
+    state.cloudError="No se pudo abrir la sesión. Reintenta desde Mi cuenta; mientras tanto estás en modo invitado.";
+  }
+  try {
+    configureLocalAccount(state.account?.id,queueCloudSync);
     await seedWords(WORDS);
-    const [progress, images, checkpoints] = await Promise.all([
-      getAllProgress(),
-      getAllImages(),
-      getMeta("checkpoints-v3", state.checkpoints)
-    ]);
-    state.progress = progress;
-    state.images = images;
-    state.checkpoints = { ...state.checkpoints, ...(checkpoints || {}) };
+    await loadLocalState();
+    if(state.account) {
+      try { await synchronize(true); await loadLocalState(); }
+      catch(error) { /* Local state remains available when the network fails. */ }
+    }
   } catch (error) {
     state.storageAvailable = false;
     console.warn("FLSHD is running without persistent storage.", error);
   }
-
+  state.booting=false;
   render();
-
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
     navigator.serviceWorker.register("./sw.js").catch(error => console.warn("Service worker unavailable", error));
   }
 }
-
 init();
