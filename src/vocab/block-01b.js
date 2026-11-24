@@ -37,11 +37,11 @@ a1-sich-duschen|act-05|(sich) duschen|ducharse|||Ich bade nicht so gern, ich dus
 a1-dusche|act-05|Dusche|ducha|die||Unsere Wohnung hat nur eine Dusche.|🏠
 a1-ecke|act-05|Ecke|esquina|die|-n|An der nächsten Ecke links.|🏠
 a1-eingang|act-05|Eingang|entrada|der||Der Eingang ist um die Ecke.|🏠
-a1-haus|act-05|Haus|casa|das|-ä, er|In welchem Haus wohnst du? Ich gehe jetzt nach Hause. Paul ist nicht zu Hause.|🏠
-a1-herd|act-05|Herd|cocina / fogón|der||In der neuen Küche fehlt noch der Herd.|🏠
-a1-holen|act-05|holen|ir a buscar / traer|||Ich hole zwei Flaschen Wasser aus der Küche.|🏠
-a1-kuche|act-05|Küche|cocina|die||Der neue Herd kommt in die Küche.|🏠
-a1-kuhlschrank|act-05|Kühlschrank|nevera|der||Haben wir noch Milch? – Ja, im Kühlschrank.|🏠
+a1-haus|act-06|Haus|casa|das|-ä, er|In welchem Haus wohnst du? Ich gehe jetzt nach Hause. Paul ist nicht zu Hause.|🏠
+a1-herd|act-06|Herd|cocina / fogón|der||In der neuen Küche fehlt noch der Herd.|🏠
+a1-holen|act-06|holen|ir a buscar / traer|||Ich hole zwei Flaschen Wasser aus der Küche.|🏠
+a1-kuche|act-06|Küche|cocina|die||Der neue Herd kommt in die Küche.|🏠
+a1-kuhlschrank|act-06|Kühlschrank|nevera|der||Haben wir noch Milch? – Ja, im Kühlschrank.|🏠
 a1-legen|act-06|legen|poner / colocar tumbado|||Legen Sie das Buch auf den Tisch.|🏠
 a1-licht|act-06|Licht|luz|das||Wo macht man hier das Licht an?|🏠
 a1-maschine|act-06|Maschine|máquina|die|-n|Die Waschmaschine ist günstig.|🏠
@@ -53,13 +53,4 @@ a1-geoffnet|act-06|geöffnet|abierto|||Der Laden ist samstags bis 16.00 Uhr geö
 a1-raum|act-06|Raum|sala / espacio|der|-ä, e|Der Unterricht ist in Raum 332.|🏠
 a1-reparieren|act-06|reparieren|reparar|||Er hat das Fahrrad repariert.|🏠
 a1-schlieen|act-06|schließen|cerrar|||Bitte, schließen Sie die Tür.|🏠
-a1-geschlossen|act-06|geschlossen|cerrado|||Die Bank hat am Samstag geschlossen.|🏠
-a1-schlussel|act-06|Schlüssel|llave|der|–|Ich gebe Ihnen noch den Zimmerschlüssel.|🏠
-a1-schrank|act-06|Schrank|armario|der|-ä, e|Die Gläser stehen im Schrank.|🏠
-a1-sitzen|act-06|sitzen|estar sentado|||Wo sitzen Sie?|🏠
-a1-sofa|act-06|Sofa|sofá|das||Das Sofa ist neu.|🏠
-a1-stehen|act-06|stehen|estar de pie / estar|||Ich glaube es nicht, aber es steht in der Zeitung. Der Bus steht schon an der Haltestelle.|🏠
-a1-stellen|act-06|stellen|poner / colocar de pie|||Stell die Tasche rechts in die Ecke!|🏠
-a1-stock|act-06|Stock|piso / planta|der||Unsere Wohnung liegt im ersten Stock.|🏠
-a1-tisch|act-06|Tisch|mesa|der|-e|Die Fotos liegen auf dem Tisch.|🏠
-a1-toilette|act-06|Toilette|baño / aseo|die|-en|Wo ist die Toilette, bitte?|🏠`;
+a1-geschlossen|act-06|geschlossen|cerrado|||Die Bank hat am Samstag geschlossen.|🏠`;
