@@ -1,4 +1,13 @@
-export const BLOCK_02_RAW = `a1-treppe|act-07|Treppe|escalera|die|-n|Die Toilette? Die Treppe hoch und dann links.|🏠
+export const BLOCK_02_RAW = `a1-schlussel|act-07|Schlüssel|llave|der|–|Ich gebe Ihnen noch den Zimmerschlüssel.|🏠
+a1-schrank|act-07|Schrank|armario|der|-ä, e|Die Gläser stehen im Schrank.|🏠
+a1-sitzen|act-07|sitzen|estar sentado|||Wo sitzen Sie?|🏠
+a1-sofa|act-07|Sofa|sofá|das||Das Sofa ist neu.|🏠
+a1-stehen|act-07|stehen|estar de pie / estar|||Ich glaube es nicht, aber es steht in der Zeitung. Der Bus steht schon an der Haltestelle.|🏠
+a1-stellen|act-07|stellen|poner / colocar de pie|||Stell die Tasche rechts in die Ecke!|🏠
+a1-stock|act-07|Stock|piso / planta|der||Unsere Wohnung liegt im ersten Stock.|🏠
+a1-tisch|act-07|Tisch|mesa|der|-e|Die Fotos liegen auf dem Tisch.|🏠
+a1-toilette|act-07|Toilette|baño / aseo|die|-en|Wo ist die Toilette, bitte?|🏠
+a1-treppe|act-07|Treppe|escalera|die|-n|Die Toilette? Die Treppe hoch und dann links.|🏠
 a1-umziehen|act-07|umziehen|mudarse|||Nächsten Monat ziehen wir um.|🏠
 a1-vermieten|act-07|vermieten|alquilar (a alguien)|||Die Wohnung ist schon vermietet.|🏠
 a1-sich-waschen|act-07|(sich) waschen|lavarse|||Wo kann ich mir die Hände waschen? Ich muss morgen waschen.|🏠
@@ -24,9 +33,9 @@ a1-einkaufen|act-08|einkaufen|hacer la compra / comprar|||Ich muss noch für mor
 a1-essen|act-08|essen|comer|||Was gibt es zu essen?|🍽️
 a1-essen-202|act-08|Essen|comida|das||Das Essen ist heute sehr gut.|🍽️
 a1-flasche|act-08|Flasche|botella|die|-n|Eine Flasche Bier, bitte.|🍽️
-a1-fleisch|act-08|Fleisch|carne|das||Fleisch mag ich nicht.|🍽️
-a1-fruhstucken|act-08|frühstücken|desayunar|||Am Sonntag frühstücke ich gern im Bett.|🍽️
-a1-fruhstuck|act-08|Frühstück|desayuno|das||Möchtest du ein Ei zum Frühstück?|🍽️
+a1-fleisch|act-09|Fleisch|carne|das||Fleisch mag ich nicht.|🍽️
+a1-fruhstucken|act-09|frühstücken|desayunar|||Am Sonntag frühstücke ich gern im Bett.|🍽️
+a1-fruhstuck|act-09|Frühstück|desayuno|das||Möchtest du ein Ei zum Frühstück?|🍽️
 a1-getrank|act-09|Getränk|bebida|das|-e|Mein Lieblingsgetränk ist Tomatensaft.|🍽️
 a1-glas|act-09|Glas|vaso / vidrio|das|-ä, er|Bitte noch ein Glas Wein! Wir brauchen noch drei Gläser.|🍽️
 a1-grillen|act-09|grillen|hacer una barbacoa|||Heute grillen wir im Garten.|🍽️
@@ -43,12 +52,12 @@ a1-nehmen|act-09|nehmen|tomar / coger|||Heute gibt es Hähnchen. Das nehme ich. 
 a1-obst|act-09|Obst|fruta|das||Im Sommer ist das Obst billig.|🍽️
 a1-ol|act-09|Öl|aceite|das||Den Salat machen wir ohne Öl.|🍽️
 a1-pommes-frites-pl|act-09|Pommes frites (pl.)|patatas fritas|die||Die Kinder essen Hähnchen mit Pommes frites.|🍽️
-a1-reis|act-09|Reis|arroz|der||Ich esse gern Reis.|🍽️
-a1-restaurant|act-09|Restaurant|restaurante|das|-s|Wir essen heute in einem Restaurant.|🍽️
-a1-riechen|act-09|riechen|oler|||Dieser Wein riecht gut.|🍽️
-a1-saft|act-09|Saft|zumo|der||Möchtest du einen Apfelsaft?|🍽️
-a1-salat|act-09|Salat|ensalada|der||Wie schmeckt dir der Salat?|🍽️
-a1-salz|act-09|Salz|sal|das||Herr Ober, kann ich bitte Salz haben?|🍽️
+a1-reis|act-10|Reis|arroz|der||Ich esse gern Reis.|🍽️
+a1-restaurant|act-10|Restaurant|restaurante|das|-s|Wir essen heute in einem Restaurant.|🍽️
+a1-riechen|act-10|riechen|oler|||Dieser Wein riecht gut.|🍽️
+a1-saft|act-10|Saft|zumo|der||Möchtest du einen Apfelsaft?|🍽️
+a1-salat|act-10|Salat|ensalada|der||Wie schmeckt dir der Salat?|🍽️
+a1-salz|act-10|Salz|sal|das||Herr Ober, kann ich bitte Salz haben?|🍽️
 a1-schinken|act-10|Schinken|jamón|der|–|Ich möchte gern ein Schinkenbrot.|🍽️
 a1-schmecken|act-10|schmecken|saber / tener sabor|||Schmeckt das gut?|🍽️
 a1-speisekarte|act-10|Speisekarte|carta / menú|die||Bringen Sie mir die Speisekarte, bitte.|🍽️
@@ -58,6 +67,9 @@ a1-trinken|act-10|trinken|beber|||Möchtest du etwas trinken?|🍽️
 a1-wasser|act-10|Wasser|agua|das||Ein Glas Wasser, bitte.|🍽️
 a1-wein|act-10|Wein|vino|der||Nein danke, ich möchte keinen Wein.|🍽️
 a1-zahlen|act-10|zahlen|pagar|||Zahlen, bitte!|🍽️
+a1-fisch|act-10|Fisch|pescado|der|-e|Ich esse gern Fisch. Fleisch mag ich nicht.|🍽️
+a1-gemuse|act-10|Gemüse|verdura / verduras|das||Gemüse brauchen wir auch noch.|🍽️
+a1-kuchen|act-10|Kuchen|pastel / tarta|der||Ich nehme ein Stück Kuchen.|🍽️
 a1-angebot|act-11|Angebot|oferta|das|-e|Heute sind Sportschuhe im Angebot.|🛍️
 a1-anzeige|act-11|Anzeige|anuncio|die|-n|Ich habe Ihre Anzeige in der Zeitung gelesen.|🛍️
 a1-geld|act-11|Geld|dinero|das||Hast du noch Geld?|🛍️
@@ -88,12 +100,4 @@ a1-dreizehn|act-12|dreizehn|trece||||🔢
 a1-vierzehn|act-12|vierzehn|catorce||||🔢
 a1-funfzehn|act-12|fünfzehn|quince||||🔢
 a1-sechzehn|act-12|sechzehn|dieciséis||||🔢
-a1-siebzehn|act-12|siebzehn|diecisiete||||🔢
-a1-achtzehn|act-12|achtzehn|dieciocho||||🔢
-a1-neunzehn|act-12|neunzehn|diecinueve||||🔢
-a1-zwanzig|act-12|zwanzig|veinte||||🔢
-a1-einundzwanzig|act-12|einundzwanzig|veintiuno||||🔢
-a1-dreiig|act-12|dreißig|treinta||||🔢
-a1-fisch|act-10|Fisch|pescado|der|-e|Ich esse gern Fisch. Fleisch mag ich nicht.|🍽️
-a1-gemuse|act-10|Gemüse|verdura / verduras|das||Gemüse brauchen wir auch noch.|🍽️
-a1-kuchen|act-10|Kuchen|pastel / tarta|der||Ich nehme ein Stück Kuchen.|🍽️`;
+a1-siebzehn|act-12|siebzehn|diecisiete||||🔢`;
