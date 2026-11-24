@@ -114,3 +114,45 @@ body.activity-mode .app-shell{height:100dvh;min-height:100dvh;max-width:none;pad
   .activity-screen{padding-left:9px;padding-right:9px}.activity-title b{font-size:12px}
   .stage-chip{padding:6px 3px;font-size:8px}.feedback-copy{font-size:9px}.feedback-copy>strong{font-size:12px}
 }
+
+
+/* Compact home layout */
+.topbar{padding:10px 13px;margin-bottom:0}
+.home-heading{width:min(100%,650px);margin:18px auto 12px;display:flex;align-items:center;justify-content:center;text-align:center}
+.home-heading h1{font-size:clamp(21px,5.6vw,28px);letter-spacing:-.7px;line-height:1.08;margin:0 0 4px}
+.home-heading p{font-size:10px;color:var(--muted);line-height:1.35;margin:0}
+.learning-path{margin-top:2px}
+.checkpoint-row{padding-top:5px;padding-bottom:8px;margin:0}
+.checkpoint-circle{width:62px;height:62px;font-size:26px}
+.checkpoint-node strong{font-size:10px}
+.checkpoint-node small{font-size:8px}
+.home-note{margin-top:18px}
+
+/* Keep every lesson/review/test perfectly centered in the viewport */
+.activity-screen{width:100%;align-items:center}
+.activity-header{width:min(100%,650px);margin:0 auto}
+.activity-screen .stage-strip{width:min(100%,650px);margin-left:auto;margin-right:auto}
+.activity-screen .session-progress{width:min(100%,650px);margin-left:auto;margin-right:auto}
+.activity-main{width:100%;align-items:center;justify-content:center}
+.activity-main>.study-card{width:min(100%,560px);margin-left:auto;margin-right:auto}
+.activity-main>.question-card{width:min(100%,600px);margin-left:auto;margin-right:auto}
+.activity-main>.options-grid{width:min(100%,600px);margin-left:auto;margin-right:auto}
+.activity-main>.activity-actions{margin-left:auto;margin-right:auto}
+.question-card,.study-card,.options-grid{margin-left:auto;margin-right:auto}
+.checkpoint-activity .question-card{width:min(100%,600px)}
+.checkpoint-activity .options-grid{width:100%}
+.activity-complete{justify-content:center}
+
+@media(max-width:450px){
+  .app-shell{padding-top:8px}
+  .topbar{top:5px;border-radius:15px;padding:9px 10px}
+  .brand{font-size:18px}
+  .stat-pill{font-size:8px;padding:4px 6px}
+  .home-heading{margin:13px auto 9px}
+  .home-heading h1{font-size:22px}
+  .home-heading p{font-size:9px}
+  .learning-path{gap:15px 0}
+  .topic-node{min-height:133px}
+  .checkpoint-row{gap:7px;padding:2px 2px 6px}
+  .checkpoint-circle{width:57px;height:57px;outline-width:6px;border-width:6px;font-size:23px}
+}
