@@ -1,6 +1,16 @@
-export const BLOCK_06_RAW = `a1-telefonieren|act-31|telefonieren|telefonear / llamar|||Darf ich mal telefonieren?|💬
+export const BLOCK_06_RAW = `a1-heien|act-31|heißen|llamarse / significar|||Ich heiße Charlotte Meier. Wie heißt das auf Deutsch?|💬
+a1-helfen|act-31|helfen|ayudar|||Können Sie mir helfen, bitte?|💬
+a1-kennen|act-31|kennen|conocer|||Kennen Sie diese Frau? – Nein, leider nicht.|💬
+a1-kennenlernen|act-31|kennenlernen|conocer por primera vez|||Wir sind neu hier. Wir möchten Sie kennenlernen.|💬
+a1-lachen|act-31|lachen|reír|||Die Kinder lachen viel.|💬
+a1-lieben|act-31|lieben|amar|||Ich liebe dich!|💬
+a1-sagen|act-31|sagen|decir|||Sag mal, wie geht es dir denn?|💬
+a1-schicken|act-31|schicken|enviar|||Bitte schicken Sie mir eine E-Mail.|💬
+a1-sprechen|act-31|sprechen|hablar|||Kann ich (mit) Herrn Klein sprechen?|💬
+a1-telefonieren|act-31|telefonieren|telefonear / llamar|||Darf ich mal telefonieren?|💬
 a1-sich-treffen|act-31|(sich) treffen|encontrarse / quedar|||Ich treffe in der Stadt einen Kollegen. Wir treffen uns immer freitags.|💬
 a1-sich-vorstellen|act-31|(sich) vorstellen|presentarse / imaginarse|||Wir wollen uns kennenlernen. Können Sie sich bitte vorstellen?|💬
+a1-einladung|act-31|Einladung|invitación|die||Danke für die Einladung!|💬
 a1-besichtigen|act-32|besichtigen|visitar / inspeccionar|||Ich möchte gern den Dom besichtigen.|⚽
 a1-bild|act-32|Bild|imagen / cuadro / foto|das|-er|Hast du ein Bild von deinem Sohn?|⚽
 a1-cd|act-32|CD|CD|die|-s|Bring bitte deine Lieblings-CD mit.|⚽
@@ -14,15 +24,15 @@ a1-gewinnen|act-32|gewinnen|ganar|||Wer gewinnt das Spiel?|⚽
 a1-hobby|act-32|Hobby|afición|das|-s|Meine Hobbys sind Wandern und Schwimmen.|⚽
 a1-horen|act-32|hören|oír / escuchar|||Hör mal! Was ist das? Ich habe das Lied schon mal gehört.|⚽
 a1-kino|act-32|Kino|cine|das|-s|Wir sehen heute Abend im Kino einen schönen Film.|⚽
-a1-lied|act-32|Lied|canción|das|-er|Welches ist dein Lieblingslied?|⚽
-a1-party|act-32|Party|fiesta|die||Heute Abend machen wir eine Party.|⚽
-a1-rad-fahren|act-32|Rad fahren|ir en bicicleta|||Das Kind kann schon Rad fahren.|⚽
-a1-rauchen|act-32|rauchen|fumar|||Ich rauche nicht.|⚽
-a1-schwimmen|act-32|schwimmen|nadar|||Ich schwimme jeden Tag einen Kilometer.|⚽
-a1-schwimmbad|act-32|Schwimmbad|piscina|das||Kommst du mit ins Schwimmbad?|⚽
-a1-spielen|act-32|spielen|jugar / tocar|||Die Kinder spielen draußen. Spielen Sie Karten?|⚽
-a1-sport|act-32|Sport|deporte|der||Ich mache viel Sport.|⚽
-a1-tanzen|act-32|tanzen|bailar|||Tanzen Sie gern?|⚽
+a1-lied|act-33|Lied|canción|das|-er|Welches ist dein Lieblingslied?|⚽
+a1-party|act-33|Party|fiesta|die||Heute Abend machen wir eine Party.|⚽
+a1-rad-fahren|act-33|Rad fahren|ir en bicicleta|||Das Kind kann schon Rad fahren.|⚽
+a1-rauchen|act-33|rauchen|fumar|||Ich rauche nicht.|⚽
+a1-schwimmen|act-33|schwimmen|nadar|||Ich schwimme jeden Tag einen Kilometer.|⚽
+a1-schwimmbad|act-33|Schwimmbad|piscina|das||Kommst du mit ins Schwimmbad?|⚽
+a1-spielen|act-33|spielen|jugar / tocar|||Die Kinder spielen draußen. Spielen Sie Karten?|⚽
+a1-sport|act-33|Sport|deporte|der||Ich mache viel Sport.|⚽
+a1-tanzen|act-33|tanzen|bailar|||Tanzen Sie gern?|⚽
 a1-verein|act-33|Verein|club / asociación|der||Es gibt einen neuen Sportverein in der Stadt.|⚽
 a1-wandern|act-33|wandern|hacer senderismo|||Wir wandern um den Chiemsee.|⚽
 a1-zeitung|act-33|Zeitung|periódico|die|-en|Ich lese gern Zeitung.|⚽
@@ -80,5 +90,4 @@ a1-jetzt|act-36|jetzt|ahora|||Jetzt machen wir eine Pause.|🎨
 a1-jung|act-36|jung|joven|||Claudia ist 21. – Was? Noch so jung?|🎨
 a1-kaputt|act-36|kaputt|roto / estropeado|||Das Glas war teuer. Es geht sehr leicht kaputt.|🎨
 a1-klar|act-36|klar|claro|||Kommst du mit? – Klar!|🎨
-a1-klein|act-36|klein|pequeño|||Eltville ist eine kleine Stadt am Rhein.|🎨
-a1-einladung|act-31|Einladung|invitación|die||Danke für die Einladung!|💬`;
+a1-klein|act-36|klein|pequeño|||Eltville ist eine kleine Stadt am Rhein.|🎨`;
