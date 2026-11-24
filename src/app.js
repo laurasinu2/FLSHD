@@ -841,6 +841,7 @@ function bindFlashcard() {
 
   card.addEventListener("click", event => {
     if (event.target.closest(".upload-label") || event.target.closest("#articleDot")) return;
+    if (Math.abs(currentX) > 10) return;
     state.session.revealed = !state.session.revealed;
     render();
   });
