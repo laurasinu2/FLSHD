@@ -217,7 +217,7 @@ function renderHome() {
     const statusClass = !unlocked ? "locked" : progress === 100 ? "done" : progress > 0 ? "partial" : "";
 
     nodes.push(`
-      <button class="topic-node ${unlocked ? "" : "locked"}" data-topic="${theme.id}"
+      <button class="topic-node ${index % 3 === 1 ? "middle-node" : "outer-node"}${unlocked ? "" : " locked"}" data-topic="${theme.id}"
         aria-label="${escapeHTML(theme.name)}, ${unlocked ? progress + "% completado" : "bloqueado"}">
         <span class="topic-index">${index + 1}</span>
         <span class="progress-ring" role="progressbar" aria-valuemin="0" aria-valuemax="100"
