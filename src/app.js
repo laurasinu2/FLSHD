@@ -758,6 +758,242 @@ function nextLearningItem() {
   render();
 }
 
+
+function checkpointPool(checkpoint) {
+  const ids = new Set(checkpointThemes(checkpoint).map(theme => theme.id));
+  return WORDS.filter(word => ids.has(word.themeId));
+}
+
+function buildCheckpointQueue(checkpoint) {
+  const queue = [];
+  for (const theme of checkpointThemes(checkpoint)) {
+    const picks = [...topicWords(theme.id)].sort(() => Math.random() - .5).slice(0, 2);
+    queue.push(...picks);
+  }
+  return queue.sort(() => Math.random() - .5).slice(0, checkpoint.questionCount).map(word => word.id);
+}
+
+function startCheckpoint(checkpointId) {
+  const checkpoint = checkpointById(checkpointId);
+  if (!checkpoint || (!checkpointAvailable(checkpoint) && !checkpointPassed(checkpointId))) return;
+
+  state.session = {
+    type: "checkpoint",
+    checkpointId,
+    queue: buildCheckpointQueue(checkpoint),
+    index: 0,
+    answered: false,
+    selected: null,
+    feedback: null,
+    feedbackTone: null,
+    optionWordId: null,
+    options: null,
+    correctChoice: null,
+    questionKind: null,
+    result: null,
+    failedWordId: null
+  };
+  state.screen = "checkpoint-session";
+  render();
+}
+
+function prepareCheckpointQuestion(word) {
+  const session = state.session;
+  if (session.optionWordId === word.id && session.questionKind) return;
+
+  const kinds = ["translation", "image", "reverse", "article", "typing"];
+  let kind = kinds[session.index % kinds.length];
+  if (kind === "article" && !word.article) kind = "image";
+
+  session.questionKind = kind;
+  session.optionWordId = word.id;
+  session.options = null;
+  session.correctChoice = null;
+
+  if (kind === "typing") return;
+
+  if (kind === "article") {
+    session.options = [
+      { value: "article:der", label: "der" },
+      { value: "article:die", label: "die" },
+      { value: "article:das", label: "das" },
+      { value: "article:none", label: "sin artículo" }
+    ];
+    session.correctChoice = `article:${word.article || "none"}`;
+    return;
+  }
+
+  const pool = checkpointPool(checkpointById(session.checkpointId)).filter(candidate => candidate.id !== word.id);
+  const candidates = [word, ...pool.sort(() => Math.random() - .5).slice(0, 3)].sort(() => Math.random() - .5);
+  session.options = candidates.map(candidate => ({
+    value: candidate.id,
+    label: kind === "reverse" ? candidate.spanish : candidate.german
+  }));
+  session.correctChoice = word.id;
+}
+
+function renderCheckpointSession() {
+  const session = state.session;
+  const checkpoint = checkpointById(session.checkpointId);
+
+  if (session.result === "failed") {
+    const word = wordById(session.failedWordId);
+    return `
+      <section class="activity-screen activity-complete">
+        <div class="checkpoint-result failed">
+          <div class="emoji">🧩</div>
+          <h2>Prueba no superada</h2>
+          <p>En esta prueba no se puede fallar ninguna pregunta. La próxima vez empezarás desde la primera, sin penalización ni límite de intentos.</p>
+          <div class="checkpoint-correction">${wordExplanation(word, false, "Repasa esta palabra y vuelve a intentarlo cuando quieras.")}</div>
+          <div class="action-row">
+            <button class="btn secondary" id="exitCheckpoint">Volver</button>
+            <button class="btn primary" id="retryCheckpoint">Probar otra vez</button>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  if (session.result === "passed") {
+    return `
+      <section class="activity-screen activity-complete">
+        <div class="checkpoint-result passed">
+          <div class="emoji">🔓</div>
+          <h2>¡Prueba perfecta!</h2>
+          <p>Has acertado todas las preguntas. El siguiente bloque de temas ya está desbloqueado.</p>
+          <button class="btn primary" id="exitCheckpoint">Continuar</button>
+        </div>
+      </section>
+    `;
+  }
+
+  const word = wordById(session.queue[session.index]);
+  if (!word) return "";
+  prepareCheckpointQuestion(word);
+
+  const kind = session.questionKind;
+  let question = "";
+  let prompt = "";
+  let answerArea = "";
+
+  if (kind === "typing") {
+    question = "Escribe la palabra alemana";
+    prompt = imageMarkup(word, "question-photo");
+    answerArea = `
+      <input id="checkpointTyping" class="answer-input" autocomplete="off" autocapitalize="off"
+        spellcheck="false" placeholder="Escribe la palabra…" ${session.answered ? "disabled" : ""}>
+      ${session.answered ? "" : '<div class="activity-actions"><button class="btn primary" id="checkCheckpointTyping">Comprobar</button></div>'}
+    `;
+  } else {
+    question = kind === "image"
+      ? "¿Cómo se llama esto en alemán?"
+      : kind === "reverse"
+        ? "¿Qué significa esta palabra?"
+        : kind === "article"
+          ? "¿Qué artículo lleva?"
+          : "¿Cuál es la palabra alemana?";
+
+    prompt = kind === "image"
+      ? imageMarkup(word, "question-photo")
+      : `<div class="prompt">${escapeHTML(kind === "translation" ? word.spanish : word.german)}</div>`;
+
+    answerArea = `
+      <div class="options-grid">
+        ${session.options.map(option => {
+          let cls = "";
+          if (session.answered && option.value === session.correctChoice) cls = "correct";
+          return `<button class="option ${cls}" data-checkpoint-option="${escapeHTML(option.value)}" ${session.answered ? "disabled" : ""}>${escapeHTML(option.label)}</button>`;
+        }).join("")}
+      </div>
+    `;
+  }
+
+  return `
+    <section class="activity-screen checkpoint-activity">
+      <header class="activity-header">
+        <button class="back-btn" id="exitCheckpoint">←</button>
+        <div class="activity-title"><b>🏁 ${escapeHTML(checkpoint.title)}</b><small>0 errores permitidos</small></div>
+        <span class="activity-count">${session.index + 1} / ${session.queue.length}</span>
+      </header>
+      <div class="session-progress"><div style="width:${Math.round(session.index / session.queue.length * 100)}%"></div></div>
+      <main class="activity-main">
+        <section class="question-card compact-question">
+          <h2>${question}</h2>
+          ${prompt}
+          ${kind === "article" ? '<p class="small muted">Elige der, die, das o “sin artículo”.</p>' : ""}
+          ${answerArea}
+        </section>
+      </main>
+      ${feedbackDock("continueCheckpoint")}
+    </section>
+  `;
+}
+
+async function checkpointChoiceResult(value) {
+  const session = state.session;
+  if (session.answered) return;
+  const word = wordById(session.queue[session.index]);
+
+  if (value !== session.correctChoice) {
+    session.result = "failed";
+    session.failedWordId = word.id;
+    session.feedback = null;
+    render();
+    return;
+  }
+
+  session.answered = true;
+  session.selected = value;
+  session.feedbackTone = "correct";
+  session.feedback = wordExplanation(word, true, "Sigue así: la prueba exige una ronda perfecta.");
+  render();
+}
+
+async function checkpointTypingResult() {
+  const input = document.querySelector("#checkpointTyping");
+  const session = state.session;
+  const word = wordById(session.queue[session.index]);
+  if (!input?.value.trim() || session.answered) return;
+
+  if (normalizeAnswer(input.value) !== normalizeAnswer(word.german)) {
+    session.result = "failed";
+    session.failedWordId = word.id;
+    render();
+    return;
+  }
+
+  session.answered = true;
+  session.feedbackTone = "correct";
+  session.feedback = wordExplanation(word, true, "Sigue así: la prueba exige una ronda perfecta.");
+  render();
+}
+
+async function continueCheckpoint() {
+  const session = state.session;
+  session.index += 1;
+  session.answered = false;
+  session.selected = null;
+  session.feedback = null;
+  session.feedbackTone = null;
+  session.optionWordId = null;
+  session.options = null;
+  session.correctChoice = null;
+  session.questionKind = null;
+
+  if (session.index >= session.queue.length) {
+    state.checkpoints[session.checkpointId] = true;
+    session.result = "passed";
+    try {
+      await setMeta("checkpoints", state.checkpoints);
+    } catch (error) {
+      state.storageAvailable = false;
+      console.warn("Could not persist checkpoint state", error);
+    }
+  }
+
+  render();
+}
+
 function renderReviewPage() {
   const due = dueWords();
 
