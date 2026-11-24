@@ -1,4 +1,4 @@
-const CACHE = "flshd-v4";
+const CACHE = "flshd-v5";
 const ASSETS = [
   "./",
   "./index.html",
@@ -7,7 +7,18 @@ const ASSETS = [
   "./src/app.js",
   "./src/data.js",
   "./src/db.js",
-  "./src/srs.js"
+  "./src/srs.js",
+  "./src/vocab/block-01a.js",
+  "./src/vocab/block-01b.js",
+  "./src/vocab/block-02.js",
+  "./src/vocab/block-03.js",
+  "./src/vocab/block-04.js",
+  "./src/vocab/block-05.js",
+  "./src/vocab/block-06.js",
+  "./src/vocab/block-07a.js",
+  "./src/vocab/block-07b.js",
+  "./src/vocab/block-08a.js",
+  "./src/vocab/block-08b.js"
 ];
 
 self.addEventListener("install", event => {
