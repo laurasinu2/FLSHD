@@ -20,7 +20,7 @@ Implementado:
 - Swipe derecha = “me la sé”.
 - Swipe izquierda = “no la sabía”.
 - Punto de artículo: der azul, die rosa, das verde; el texto se revela al tocar.
-- Fase de 4 opciones, alternando significado y fotografía.
+- Fase de 4 opciones con preguntas de imagen, traducción directa, traducción inversa y artículo.
 - Fase de escritura con comparación sin distinguir mayúsculas/minúsculas.
 - Una palabra solo se aprende tras una secuencia limpia de las 3 fases.
 - Fechas de aprendizaje, último acierto, último fallo y próximo repaso.
@@ -29,9 +29,9 @@ Implementado:
 - Tras un fallo: repaso en 1–2 días y reinicio de la escalera.
 - Priorización por retraso y fallos de los últimos 7 días.
 - Pestañas Aprender, Repasar y Progreso.
-- Pruebas de nivel después de cada bloque de 6 temas.
+- Pruebas de nivel después de cada bloque de 6 temas, disponibles desde el principio aunque todavía no hayas estudiado esos temas.
 - Las pruebas de nivel exigen 0 errores; un fallo termina el intento, pero no hay límite de reintentos.
-- Los bloques futuros quedan bloqueados hasta superar la prueba anterior; su vocabulario sí se puede consultar.
+- Aprobar la prueba es lo único que desbloquea el siguiente bloque; los temas futuros permiten consultar su vocabulario.
 - Preguntas de reconocimiento variadas: imagen, traducción directa, traducción inversa y artículo.
 - Las actividades ocupan el alto de la pantalla y desactivan el scroll; el feedback queda fijado en la parte inferior.
 - Feedback pedagógico con corrección, género cuando aplica y ejemplo breve.
