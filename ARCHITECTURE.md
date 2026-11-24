@@ -93,9 +93,11 @@ Cuando llega a 3:
 ## Preguntas
 
 ### Fase 2
-Alterna:
+Varía entre:
 - significado español → elegir palabra alemana;
-- foto → elegir palabra alemana.
+- foto → elegir palabra alemana;
+- palabra alemana → elegir significado español;
+- sustantivo → elegir `der`, `die`, `das` o sin artículo.
 
 Hay cuatro respuestas posibles.
 
@@ -116,3 +118,8 @@ Si una palabra falla durante el repaso:
 Las fotos y el progreso viven en IndexedDB del navegador. Esto da privacidad y permite una primera versión sin backend, pero no sincroniza entre dispositivos.
 
 Para sincronización futura, la interfaz de `db.js` puede reemplazarse por una API/Supabase/Firebase sin tener que reescribir el flujo pedagógico.
+
+
+## Pruebas de nivel
+
+Cada 6 temas aparece un checkpoint. La prueba puede intentarse en cualquier momento, incluso sin haber completado los seis temas del bloque. El siguiente bloque solo se desbloquea al aprobarla con 0 errores. Un fallo termina inmediatamente el intento y no existe límite de reintentos. Los temas bloqueados siguen permitiendo consultar su vocabulario.
