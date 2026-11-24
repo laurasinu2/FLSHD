@@ -14,7 +14,10 @@ FLSHD/
     ├── app.js
     ├── data.js
     ├── db.js
-    └── srs.js
+    ├── srs.js
+    └── vocab/
+        ├── block-01a.js … block-08b.js
+        └── (datos A1 por bloques)
 ```
 
 ## Responsabilidades
@@ -123,3 +126,10 @@ Para sincronización futura, la interfaz de `db.js` puede reemplazarse por una A
 ## Pruebas de nivel
 
 Cada 6 temas aparece un checkpoint. La prueba puede intentarse en cualquier momento, incluso sin haber completado los seis temas del bloque. El siguiente bloque solo se desbloquea al aprobarla con 0 errores. Un fallo termina inmediatamente el intento y no existe límite de reintentos. Los temas bloqueados siguen permitiendo consultar su vocabulario.
+
+
+## Currículo completo A1
+
+La capa de datos contiene 48 actividades y 800 tarjetas distintas. Las actividades se agrupan de seis en seis, por lo que la interfaz genera ocho checkpoints automáticamente. Los archivos `src/vocab/block-*.js` contienen los datos léxicos y `src/data.js` los combina en tiempo de carga.
+
+Las actividades se dividen en partes cuando un tema es grande. El límite actual es 22 tarjetas por actividad. Las pruebas de nivel toman una muestra de las seis actividades de su bloque y completan hasta 12 preguntas incluso cuando alguna actividad es muy corta.
