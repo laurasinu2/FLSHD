@@ -1540,7 +1540,7 @@ function bindAccount(){
     if(!window.confirm("¿Copiar las fotos y el progreso del modo invitado de este navegador a tu cuenta? No se borrará el original."))return;
     run(async()=>{
       await synchronize(true);
-      const count=await importGuestData(new Set(WORDS.map(w=>w.id)));
+      const count=await importGuestData(new Set(WORDS.map(w=>w.id)), async dataUrl => compressImage(await (await fetch(dataUrl)).blob()));
       await loadLocalState();
       await synchronize(true);await loadLocalState();
       return count+" registros locales importados y sincronizados.";
