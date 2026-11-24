@@ -1,4 +1,4 @@
-const CACHE = "flshd-v2";
+const CACHE = "flshd-v3";
 const ASSETS = [
   "./",
   "./index.html",
