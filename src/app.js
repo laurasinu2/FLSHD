@@ -287,6 +287,7 @@ function renderTopicIntro() {
             <span class="vocab-icon">${word.icon}</span>
             <div>
               <b>${escapeHTML(fullGerman(word))}</b>
+              ${word.plural ? `<small>Plural: ${escapeHTML(word.plural)}</small>` : ""}
               <small>${escapeHTML(word.spanish)}</small>
             </div>
           </div>
@@ -456,6 +457,7 @@ function renderFlashcard(word) {
         ${articleMarkup(word)}
         ${revealed ? escapeHTML(word.german) : "••••••"}
       </div>
+      ${revealed && word.plural ? `<div class="small muted">Plural: ${escapeHTML(word.plural)}</div>` : ""}
       <p class="translation">${escapeHTML(word.spanish)}</p>
     </article>
 
@@ -738,12 +740,33 @@ function checkpointPool(checkpoint) {
 }
 
 function buildCheckpointQueue(checkpoint) {
-  const queue = [];
+  const selected = [];
+  const selectedIds = new Set();
+
+  // Give every activity in the block representation first.
   for (const theme of checkpointThemes(checkpoint)) {
     const picks = [...topicWords(theme.id)].sort(() => Math.random() - .5).slice(0, 2);
-    queue.push(...picks);
+    for (const word of picks) {
+      if (!selectedIds.has(word.id)) {
+        selected.push(word);
+        selectedIds.add(word.id);
+      }
+    }
   }
-  return queue.sort(() => Math.random() - .5).slice(0, checkpoint.questionCount).map(word => word.id);
+
+  // Very short activities may provide fewer than two cards. Fill the test from
+  // the rest of the same six-activity block until the target length is reached.
+  const remainder = checkpointPool(checkpoint)
+    .filter(word => !selectedIds.has(word.id))
+    .sort(() => Math.random() - .5);
+
+  while (selected.length < checkpoint.questionCount && remainder.length) {
+    selected.push(remainder.shift());
+  }
+
+  return selected.sort(() => Math.random() - .5)
+    .slice(0, checkpoint.questionCount)
+    .map(word => word.id);
 }
 
 function startCheckpoint(checkpointId) {
