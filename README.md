@@ -2,6 +2,10 @@
 
 Prototipo web para aprender vocabulario alemán A1 mediante tus propias fotografías, tarjetas y repetición espaciada.
 
+## Estado de desarrollo
+
+**Parte 1: pantalla principal y navegación** implementada: portada adaptable con 3 temas por fila en móvil y 4 en ordenador, ilustraciones temáticas (emoji), anillo circular de progreso, orden vertical, estados por tema, panel resumen, accesos directos y pestañas inferiores. El progreso se deriva de los estados individuales de las palabras. Pruebas básicas de renderizado y navegación realizadas en un entorno simulado; queda comprobar en dispositivos reales.
+
 ## Funcionalidades implementadas
 - Portada móvil con **16 temas**, hasta **3 círculos por fila** y progreso alrededor.
 - **80 palabras iniciales de demostración**, cada una con un identificador estable `tema-número`, traducción, artículo y emoji.
