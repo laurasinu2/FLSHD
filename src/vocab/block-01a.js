@@ -12,6 +12,7 @@ a1-vorsicht|act-01|Vorsicht|cuidado|die||Vorsicht! Da kommt ein Auto.|👋
 a1-wiederhoren|act-01|Wiederhören|volver a oír / despedida telefónica|das||Wir müssen jetzt Schluss machen. Also auf Wiederhören!|👋
 a1-wiedersehen|act-01|Wiedersehen|volver a ver / despedida|das||Auf Wiedersehen!|👋
 a1-willkommen|act-01|willkommen|bienvenido|||Herzlich willkommen!|👋
+a1-hallo|act-01|hallo|hola|||Hallo Inge! Wie geht’s?|👋
 a1-adresse|act-02|Adresse|dirección|die|-en|Können Sie mir seine Adresse sagen?|🪪
 a1-alter|act-02|Alter|edad|das||Alter: 26 Jahre.|🪪
 a1-ausland|act-02|Ausland|extranjero / fuera del país|das||Fahren Sie ins Ausland?|🪪
@@ -55,5 +56,4 @@ a1-grovater|act-03|Großvater|abuelo|der||Mein Großvater ist schon 80.|👨‍�
 a1-hausfrau|act-03|Hausfrau|ama de casa|die|-en/||👨‍👩‍👧
 a1-hausmann|act-03|Hausmann|amo de casa|der||Die Hausfrau/der Hausmann wäscht, kocht und kauft ein.|👨‍👩‍👧
 a1-herr|act-03|Herr|señor|der|-en|Guten Tag, Herr Sommer!|👨‍👩‍👧
-a1-jugendliche|act-03|Jugendliche|joven / adolescente|der|-n|Viele Jugendliche kaufen gern ein.|👨‍👩‍👧
-a1-hallo|act-01|hallo|hola|||Hallo Inge! Wie geht’s?|👋`;
+a1-jugendliche|act-03|Jugendliche|joven / adolescente|der|-n|Viele Jugendliche kaufen gern ein.|👨‍👩‍👧`;
