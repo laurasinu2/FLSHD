@@ -1,0 +1,12 @@
+{
+  "name": "FLSHD · Deutsch visual",
+  "short_name": "FLSHD",
+  "description": "Aprende vocabulario alemán con tus propias fotos y repetición espaciada.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f8fb",
+  "theme_color": "#78c800",
+  "lang": "es",
+  "orientation": "portrait-primary"
+}
