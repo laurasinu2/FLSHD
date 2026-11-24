@@ -258,9 +258,6 @@ function renderHome() {
         <h1>Tu camino de alemán 🇩🇪</h1>
         <p>Supera cada prueba perfecta para desbloquear el siguiente bloque.</p>
       </div>
-      <button class="review-shortcut" id="openReview" aria-label="Abrir repasos">
-        🧠 <b>${dueWords().length}</b>
-      </button>
     </section>
 
     <section class="learning-path" aria-label="Temas y pruebas de nivel">
