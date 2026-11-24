@@ -24,10 +24,10 @@ create policy flshd_update_own on public.flshd_records for update to authenticat
 
 -- Retry-safe, per-record last-write-wins; checkpoint passes are monotonic.
 create or replace function public.flshd_put_record(
-  p_kind text, p_record_id text, p_payload jsonb, p_changed_at timestamptz
+  p_user_id uuid, p_kind text, p_record_id text, p_payload jsonb, p_changed_at timestamptz
 ) returns void language plpgsql security invoker set search_path = '' as $$
 begin
-  if auth.uid() is null then raise exception 'Authentication required'; end if;
+  if auth.uid() is null or auth.uid() <> p_user_id then raise exception 'Authentication required'; end if;
   if p_changed_at is null then raise exception 'Timestamp required'; end if;
   if p_kind = 'checkpoints' and (p_record_id <> 'checkpoints-v3' or exists (
     select 1 from jsonb_each(p_payload) as x(k,v) where v <> 'true'::jsonb
@@ -41,6 +41,6 @@ begin
     where excluded.kind = 'checkpoints' or excluded.changed_at >= r.changed_at;
 end;
 $$;
-revoke all on function public.flshd_put_record(text,text,jsonb,timestamptz) from public, anon;
-grant execute on function public.flshd_put_record(text,text,jsonb,timestamptz) to authenticated;
+revoke all on function public.flshd_put_record(uuid,text,text,jsonb,timestamptz) from public, anon;
+grant execute on function public.flshd_put_record(uuid,text,text,jsonb,timestamptz) to authenticated;
 commit;
