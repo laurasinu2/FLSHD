@@ -49,7 +49,7 @@ a1-reiseburo|act-21|Reisebüro|agencia de viajes|das|-s|Mein Mann arbeitet im Re
 a1-reisefuhrer|act-21|Reiseführer|guía de viaje / guía|der||Ich kaufe mir einen Reiseführer von Berlin. Unser Reiseführer heißt Peter.|🧳
 a1-rezeption|act-21|Rezeption|recepción|die||Fragen Sie bitte im Hotel an der Rezeption.|🧳
 a1-see|act-21|See|lago|der||Komm, wir fahren zum Starnberger See.|🧳
-a1-sehenswurdigkeit|act-21|Sehenswürdigkeit|lugar de interés / monumento|die||-en Welche Sehenswürdigkeiten gibt es in Frankfurt?|🧳
+a1-sehenswurdigkeit|act-21|Sehenswürdigkeit|lugar de interés / monumento|die|-en|Welche Sehenswürdigkeiten gibt es in Frankfurt?|🧳
 a1-stadt|act-21|Stadt|ciudad|die|-ä, e|Heidelberg ist eine alte Stadt.|🧳
 a1-urlaub|act-21|Urlaub|vacaciones|der||Ich nehme im September Urlaub.|🧳
 a1-absender|act-22|Absender|remitente|der||Da ist ein Brief für dich ohne Absender.|🏛️
