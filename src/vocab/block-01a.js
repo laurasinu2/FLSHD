@@ -55,4 +55,5 @@ a1-grovater|act-03|Großvater|abuelo|der||Mein Großvater ist schon 80.|👨‍�
 a1-hausfrau|act-03|Hausfrau|ama de casa|die|-en/||👨‍👩‍👧
 a1-hausmann|act-03|Hausmann|amo de casa|der||Die Hausfrau/der Hausmann wäscht, kocht und kauft ein.|👨‍👩‍👧
 a1-herr|act-03|Herr|señor|der|-en|Guten Tag, Herr Sommer!|👨‍👩‍👧
-a1-jugendliche|act-03|Jugendliche|joven / adolescente|der|-n|Viele Jugendliche kaufen gern ein.|👨‍👩‍👧`;
+a1-jugendliche|act-03|Jugendliche|joven / adolescente|der|-n|Viele Jugendliche kaufen gern ein.|👨‍👩‍👧
+a1-hallo|act-01|hallo|hola|||Hallo Inge! Wie geht’s?|👋`;
