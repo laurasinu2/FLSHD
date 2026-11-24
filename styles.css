@@ -156,3 +156,8 @@ body.activity-mode .app-shell{height:100dvh;min-height:100dvh;max-width:none;pad
   .checkpoint-row{gap:7px;padding:2px 2px 6px}
   .checkpoint-circle{width:57px;height:57px;outline-width:6px;border-width:6px;font-size:23px}
 }
+
+.block-label{grid-column:1/-1;display:flex;align-items:baseline;justify-content:center;gap:7px;margin:5px 0 -4px;color:#526072}
+.block-label span{font-size:12px;font-weight:950;letter-spacing:.06em;text-transform:uppercase}
+.block-label small{font-size:9px;color:#98a2ae}
+@media(max-width:450px){.block-label{margin-top:2px;margin-bottom:-6px}.block-label span{font-size:10px}}
