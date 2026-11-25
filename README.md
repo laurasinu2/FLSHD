@@ -68,7 +68,7 @@ En modo invitado, las fotos y el progreso se almacenan localmente. Con una cuent
 
 ## Activar cuentas Supabase
 
-La integración está preparada, pero requiere un proyecto real antes de activar el acceso.
+La integración está configurada con Project FLSHD (Supabase). La migración está aplicada y la clave pública está configurada en el frontend.
 
 1. Crea o selecciona un proyecto Supabase dedicado a FLSHD.
 2. Ejecuta `supabase/migrations/001_accounts.sql` desde SQL Editor. Activa el proveedor de correo en Authentication; conserva la confirmación de correo y configura SMTP si es necesario.
@@ -86,4 +86,4 @@ La integración está preparada, pero requiere un proyecto real antes de activar
 - Los conflictos por palabra o foto se resuelven por fecha de modificación (último cambio); las pruebas aprobadas se combinan. Los contadores de intentos simultáneos no se suman. El primer inicio de sesión requiere internet; el arranque sin internet depende de que el SDK y la sesión estén disponibles en caché.
 - El cierre de sesión exige enviar los cambios pendientes. La base local de la cuenta permanece en el navegador: no está cifrada y no es una barrera frente al acceso físico/devtools.
 - La caché de la PWA solo guarda recursos estáticos públicos y el SDK público; no respuestas privadas de Supabase.
-- Pendiente: ejecutar migración, configurar credenciales y probar autenticación, aislamiento, sincronización, funcionamiento sin conexión y cuotas en un proyecto real.
+- Migración y configuración pública aplicadas. RLS y permisos anónimos verificados en la base real; el asesor de seguridad no devuelve avisos. Pendiente: comprobar las URL de redirección de Auth y realizar pruebas de registro, inicio de sesión, aislamiento y sincronización desde dos navegadores reales.
