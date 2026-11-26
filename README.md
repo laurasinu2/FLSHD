@@ -87,3 +87,8 @@ La integración está configurada con Project FLSHD (Supabase). La migración es
 - El cierre de sesión exige enviar los cambios pendientes. La base local de la cuenta permanece en el navegador: no está cifrada y no es una barrera frente al acceso físico/devtools.
 - La caché de la PWA solo guarda recursos estáticos públicos y el SDK público; no respuestas privadas de Supabase.
 - Migración y configuración pública aplicadas. RLS y permisos anónimos verificados en la base real; el asesor de seguridad no devuelve avisos. Pendiente: comprobar las URL de redirección de Auth y realizar pruebas de registro, inicio de sesión, aislamiento y sincronización desde dos navegadores reales.
+
+
+### Privacidad de la sesión
+
+FLSHD utiliza sessionStorage con una clave propia y no restaura el antiguo inicio persistente de localStorage. La sesión se conserva al recargar la misma pestaña, no se comparte automáticamente con una pestaña independiente ni con otro navegador. Algunos navegadores pueden restaurar pestañas o autocompletar credenciales según su propia configuración. Se verifica la identidad con Auth antes de abrir la base local de una cuenta. La aplicación no inicia sesión automáticamente desde tokens en la URL de confirmación: después de confirmar el correo, se entra con las credenciales. El correo solo se muestra al pulsar Mostrar mi correo. No se eliminan fotos ni cambios pendientes al cerrar sesión. Una comprobación inicial de identidad requiere conexión a internet; si falla, no se abre el perfil privado. IndexedDB no está cifrada frente al acceso físico o herramientas de desarrollador.
