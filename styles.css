@@ -255,3 +255,22 @@ body.activity-mode .app-shell{position:fixed;top:var(--activity-top,0px);left:va
 .short-activity .cue-text{font-size:19px}
 .tiny-activity.typing-activity .cue-icon{display:none}
 .tiny-activity.typing-activity .word-cue{padding:5px}
+
+
+/* Level progress: completion stays fixed; memory freshness changes colour. */
+.learning-header{position:sticky;top:8px;z-index:10;display:flex;flex-direction:column;gap:6px}
+.learning-header .topbar{position:static}
+.level-progress{--memory-color:#a1adbb;background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px 12px 7px;box-shadow:0 4px 14px #2a405209}
+.level-progress.fresh{--memory-color:#78c800}
+.level-progress.aging{--memory-color:#e48a14}
+.level-progress.urgent{--memory-color:#dc4d4d}
+.level-progress-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;line-height:1.2}
+.level-progress-head b{font-weight:900}
+.level-count{font-size:10px;font-weight:600;color:var(--muted)}
+.level-percent{font-variant-numeric:tabular-nums}
+.level-track{height:9px;border-radius:999px;background:#e6ebf0;margin-top:6px;overflow:hidden}
+.level-fill{height:100%;border-radius:inherit;background:var(--memory-color);transition:width .25s ease,background-color .25s ease}
+.level-memory{display:flex;align-items:center;gap:5px;margin-top:4px;font-size:10px;line-height:1.2;font-weight:700;color:var(--muted)}
+.level-memory-dot{width:7px;height:7px;border-radius:50%;background:var(--memory-color);flex:none}
+@media(max-width:450px){.learning-header{top:5px;gap:5px}.level-progress{padding:7px 10px 6px}.level-track{height:8px}.level-count,.level-memory{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.level-fill{transition:none}}
