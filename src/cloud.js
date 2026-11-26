@@ -8,6 +8,38 @@ let activeUser;
 let chain = Promise.resolve();
 let timer;
 let report = () => {};
+const AUTH_STORAGE_KEY = "flshd-private-session-v1";
+
+// Never revive the old persistent login. Only remove this project's auth
+// credentials; the user's learning data and unsynced photos remain intact.
+function preparePrivateSession() {
+  const projectRef = new URL(SUPABASE_URL).hostname.split(".")[0];
+  const oldKey = "sb-" + projectRef + "-auth-token";
+  try {
+    localStorage.removeItem(oldKey);
+    localStorage.removeItem(oldKey + "-code-verifier");
+  } catch {}
+  const url = new URL(location.href);
+  const fragment = new URLSearchParams(url.hash.slice(1));
+  const sensitive = ["access_token","refresh_token","provider_token","provider_refresh_token","token_hash","code","error","error_code","error_description"];
+  let modified = false;
+  if (sensitive.some(key=>fragment.has(key))) {
+    url.hash = "";
+    modified = true;
+  }
+  for(const key of sensitive){
+    if(url.searchParams.has(key)){url.searchParams.delete(key);modified=true;}
+  }
+  if(modified) history.replaceState(history.state,"",url.pathname+url.search+url.hash);
+}
+
+function clearPrivateSession() {
+  try {
+    sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    sessionStorage.removeItem(AUTH_STORAGE_KEY+"-code-verifier");
+  } catch {}
+}
+
 
 function loadSdk() {
   if (window.supabase?.createClient) return Promise.resolve();
@@ -24,15 +56,27 @@ function loadSdk() {
 export async function initializeCloud(onStatus) {
   report=onStatus;
   if (!cloudConfigured) return null;
+  preparePrivateSession();
   await loadSdk();
   if (!window.supabase?.createClient) throw new Error("Supabase no está disponible");
   client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
-    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},
+    auth:{persistSession:true,storage:window.sessionStorage,storageKey:AUTH_STORAGE_KEY,autoRefreshToken:true,detectSessionInUrl:false},
     global:{fetch:(url,options)=>fetch(url,{...options,cache:"no-store"})}
   });
   const {data,error}=await client.auth.getSession();
   if(error) throw error;
-  activeUser=data.session?.user||null;
+  activeUser=null;
+  if(data.session) {
+    // The local session object alone is not proof of identity.
+    // Only open the account's private IndexedDB after server verification.
+    const verified=await client.auth.getUser();
+    if(verified.error || !verified.data?.user || verified.data.user.id!==data.session.user?.id) {
+      clearPrivateSession();
+      try { await client.auth.signOut({scope:"local"}); } catch {}
+      throw new Error("No se pudo verificar tu sesión. Inicia sesión de nuevo.");
+    }
+    activeUser=verified.data.user;
+  }
   client.auth.onAuthStateChange((event,session)=>{
     if(event==="INITIAL_SESSION") return;
     const id=session?.user?.id||null;
@@ -60,11 +104,15 @@ export async function signUp(email,password) {
 }
 export async function signOut() {
   if(!client) return;
-  // Do not discard the authenticated session before pending changes upload.
-  await synchronize(false);
-  const {error}=await client.auth.signOut({scope:"local"});
-  if(error) throw error;
-  location.reload();
+  // Try to save changes, but never trap a user in a session on a shared device.
+  clearTimeout(timer);
+  try { await synchronize(false); }
+  catch {
+    if(!window.confirm("Hay cambios pendientes de sincronizar. Se conservarán en este navegador para tu próximo inicio de sesión. ¿Cerrar sesión igualmente?")) return;
+  }
+  activeUser=null;
+  try { await client.auth.signOut({scope:"local"}); }
+  finally { clearPrivateSession(); location.reload(); }
 }
 async function push() {
   const pending=await pendingCloudRows();
