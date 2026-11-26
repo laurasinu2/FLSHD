@@ -240,3 +240,18 @@ body.activity-mode .app-shell{position:fixed;top:var(--activity-top,0px);left:va
 .account-error{color:#b14b42}
 .account-card button:disabled{opacity:.55;cursor:wait}
 @media(max-width:400px){.top-stats{gap:3px}.account-button{font-size:11px;padding:4px 6px}}
+
+/* Vocabulary cues: a missing photo is not an empty image slot. */
+.word-cue{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:8px;min-width:0;padding:16px 10px;background:#f0f5fa;border-radius:16px}
+.cue-icon{font-size:clamp(36px,12vw,68px);line-height:1.15}
+.cue-text{font-size:clamp(20px,5.7vw,29px);font-weight:850;line-height:1.2;overflow-wrap:anywhere}
+.activity-screen .word-cue{flex:0 1 auto;min-height:0;margin:0}
+.activity-screen .study-card .word-cue{padding:clamp(14px,4vh,30px) 10px}
+.activity-screen img+.word-cue{padding:6px;background:none}
+.activity-screen img+.word-cue .cue-text{font-size:16px}
+.short-activity .word-cue{padding:8px;gap:4px}
+.short-activity .study-card .word-cue{padding:10px}
+.short-activity .cue-icon{font-size:34px}
+.short-activity .cue-text{font-size:19px}
+.tiny-activity.typing-activity .cue-icon{display:none}
+.tiny-activity.typing-activity .word-cue{padding:5px}
