@@ -431,12 +431,39 @@ function sessionProgressPercent() {
   return Math.round((session.index / session.queue.length) * 100);
 }
 
+function hasWordPhoto(word) {
+  return Boolean(state.images.get(word.id)?.dataUrl);
+}
+
+function photoMarkup(word, className = "word-photo") {
+  const record=state.images.get(word.id);
+  if (!record?.dataUrl) return "";
+  return `<img class="${className}" src="${escapeHTML(record.dataUrl)}" alt="Foto personal">`;
+}
+
+function textCue(word, withHint = true) {
+  const hint = withHint && word.visualHint
+    ? `<span class="cue-icon" aria-hidden="true">${escapeHTML(word.visualHint)}</span>` : "";
+  return `<div class="word-cue">${hint}<div class="cue-text">${escapeHTML(word.spanish)}</div></div>`;
+}
+
 function imageMarkup(word, className = "word-photo") {
-  const record = state.images.get(word.id);
-  if (record?.dataUrl) {
-    return `<img class="${className}" src="${record.dataUrl}" alt="Tu foto para ${escapeHTML(word.spanish)}">`;
+  // A personal photo for an abstract concept may still be useful as a mnemonic,
+  // but it must not be the only clue in a question.
+  if(hasWordPhoto(word)){
+    return photoMarkup(word,className) + (word.visualType !== "photo" ? textCue(word,false) : "");
   }
-  return `<div class="photo-placeholder" aria-label="Sin fotografía">${word.icon}</div>`;
+  return textCue(word);
+}
+
+function isPhotoQuestion(word) {
+  return word.visualType === "photo" && hasWordPhoto(word);
+}
+
+function germanPromptTitle(word, typing=false) {
+  return isPhotoQuestion(word)
+    ? (typing ? "Escribe el nombre en alemán" : "¿Cómo se llama esto en alemán?")
+    : (typing ? "Escribe en alemán" : "¿Cómo se dice en alemán?");
 }
 
 function articleMarkup(word) {
@@ -496,10 +523,10 @@ function renderFlashcard(word) {
       <span class="swipe-hint unknown" id="unknownHint">NO LA SABÍA</span>
 
       ${imageMarkup(word)}
-      <label class="upload-label">
-        📷 ${state.images.has(word.id) ? "Cambiar mi foto" : "Subir / hacer foto"}
+      ${word.visualType === "photo" || hasWordPhoto(word) ? `<label class="upload-label">
+        📷 ${hasWordPhoto(word) ? "Cambiar mi foto" : "Añadir foto (opcional)"}
         <input id="photoInput" type="file" accept="image/*" capture="environment">
-      </label>
+      </label>` : ""}
 
       <div class="flip-copy">${revealed ? "Toca la tarjeta para ocultar" : "Toca la tarjeta para revelar la palabra"}</div>
       <div class="answer-word">
@@ -507,7 +534,7 @@ function renderFlashcard(word) {
         ${revealed ? escapeHTML(word.german) : "••••••"}
       </div>
       ${revealed && word.plural ? `<div class="small muted">Plural: ${escapeHTML(word.plural)}</div>` : ""}
-      <p class="translation">${escapeHTML(word.spanish)}</p>
+      ${isPhotoQuestion(word) ? `<p class="translation">${escapeHTML(word.spanish)}</p>` : ""}
     </article>
 
     <div class="activity-actions split">
@@ -559,12 +586,12 @@ function renderChoiceQuestion(word) {
 
   const kind = session.questionKind;
   const question = kind === "image"
-    ? "¿Cómo se llama esto en alemán?"
+    ? germanPromptTitle(word)
     : kind === "reverse"
       ? "¿Qué significa esta palabra?"
       : kind === "article"
         ? "¿Qué artículo lleva esta palabra?"
-        : "¿Cuál es la palabra alemana?";
+        : "¿Cómo se dice en alemán?";
 
   let prompt = "";
   if (kind === "image") {
@@ -581,7 +608,7 @@ function renderChoiceQuestion(word) {
     <section class="question-card compact-question">
       <h2>${question}</h2>
       ${prompt}
-      ${kind === "image" && !state.images.has(word.id) ? '<p class="small muted">Aún no has subido foto: usamos el icono como apoyo.</p>' : ""}
+
     </section>
 
     <div class="options-grid">
@@ -605,9 +632,8 @@ function renderTypingQuestion(word) {
 
   return `
     <section class="question-card compact-question">
-      <h2>Escribe la palabra alemana</h2>
+      <h2>${germanPromptTitle(word,true)}</h2>
       ${imageMarkup(word, "question-photo")}
-      <p class="translation">${escapeHTML(word.spanish)}</p>
       <input id="typingAnswer" class="answer-input" type="text" autocomplete="off" autocapitalize="off"
         spellcheck="false" placeholder="Escribe en alemán…" ${session.answered ? "disabled" : ""}>
       <p class="small muted">Mayúsculas y minúsculas no importan. Puedes escribir el sustantivo con o sin artículo.</p>
@@ -921,7 +947,7 @@ function renderCheckpointSession() {
   let answerArea = "";
 
   if (kind === "typing") {
-    question = "Escribe la palabra alemana";
+    question = germanPromptTitle(word,true);
     prompt = imageMarkup(word, "question-photo");
     answerArea = `
       <input id="checkpointTyping" class="answer-input" autocomplete="off" autocapitalize="off"
@@ -930,12 +956,12 @@ function renderCheckpointSession() {
     `;
   } else {
     question = kind === "image"
-      ? "¿Cómo se llama esto en alemán?"
+      ? germanPromptTitle(word)
       : kind === "reverse"
         ? "¿Qué significa esta palabra?"
         : kind === "article"
           ? "¿Qué artículo lleva?"
-          : "¿Cuál es la palabra alemana?";
+          : "¿Cómo se dice en alemán?";
 
     prompt = kind === "image"
       ? imageMarkup(word, "question-photo")
@@ -1109,9 +1135,8 @@ function renderReviewSession() {
   if (typed) {
     body = `
       <section class="question-card compact-question">
-        <h2>¿Cómo se llama en alemán?</h2>
+        <h2>${germanPromptTitle(word,true)}</h2>
         ${imageMarkup(word, "question-photo")}
-        <p class="translation">${escapeHTML(word.spanish)}</p>
         <input id="reviewTyping" class="answer-input" autocomplete="off" autocapitalize="off" spellcheck="false"
           placeholder="Escribe la palabra…" ${session.answered ? "disabled" : ""}>
       </section>
@@ -1128,7 +1153,7 @@ function renderReviewSession() {
     }
     body = `
       <section class="question-card compact-question">
-        <h2>${reverse ? "¿Qué significa esta palabra?" : "Elige el nombre correcto"}</h2>
+        <h2>${reverse ? "¿Qué significa esta palabra?" : germanPromptTitle(word)}</h2>
         ${reverse ? `<div class="prompt">${escapeHTML(word.german)}</div>` : imageMarkup(word, "question-photo")}
       </section>
       <div class="options-grid">
