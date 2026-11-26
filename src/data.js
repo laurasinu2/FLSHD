@@ -1,3 +1,4 @@
+import { visualFor } from "./visual.js";
 import { BLOCK_01A_RAW } from "./vocab/block-01a.js";
 import { BLOCK_01B_RAW } from "./vocab/block-01b.js";
 import { BLOCK_02_RAW } from "./vocab/block-02.js";
@@ -159,7 +160,7 @@ function buildBalancedCurriculum(input) {
   return words;
 }
 
-export const WORDS = buildBalancedCurriculum(parsedWords);
+export const WORDS = buildBalancedCurriculum(parsedWords).map(word => ({...word,...visualFor(word)}));
 
 export const byTheme = themeId => WORDS.filter(word => word.themeId === themeId);
 export const wordById = id => WORDS.find(word => word.id === id);
