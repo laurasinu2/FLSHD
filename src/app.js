@@ -1,4 +1,4 @@
-import { THEMES, WORDS, byTheme, themeById, wordById } from "./data.js";
+import { CURRENT_LEVEL, THEMES, WORDS, byTheme, themeById, wordById } from "./data.js";
 import {
   seedWords,
   defaultProgress,
@@ -19,7 +19,8 @@ import {
   scheduleNewlyLearned,
   scheduleReviewSuccess,
   buildReviewQueue,
-  reviewUrgency
+  reviewUrgency,
+  summarizeLevel
 } from "./srs.js";
 
 const root = document.querySelector("#app");
@@ -170,6 +171,28 @@ function dueWords() {
   return buildReviewQueue(WORDS, state.progress);
 }
 
+function levelProgressMarkup() {
+  const level=summarizeLevel(THEMES,WORDS,state.progress,CURRENT_LEVEL);
+  const label={empty:"Aún sin palabras aprendidas",fresh:"Memoria fresca",aging:"Conviene repasar",urgent:"Repaso urgente"}[level.tone];
+  return `
+    <section class="level-progress ${level.tone}" aria-label="Progreso del nivel ${escapeHTML(level.level)}">
+      <div class="level-progress-head">
+        <span><b>Nivel ${escapeHTML(level.level)}</b> <span class="level-count">· ${level.completed}/${level.total} actividades</span></span>
+        <b class="level-percent">${level.percent}%</b>
+      </div>
+      <div class="level-track" role="progressbar" aria-label="Actividades completadas del nivel ${escapeHTML(level.level)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${level.percent}" aria-valuetext="${level.completed} de ${level.total} actividades completadas">
+        <div class="level-fill" style="width:${level.percent}%"></div>
+      </div>
+      <div class="level-memory"><span class="level-memory-dot"></span><span>${label}</span></div>
+    </section>
+  `;
+}
+
+function refreshLevelProgress() {
+  const bar=document.querySelector("#levelProgressSlot");
+  if(bar) bar.innerHTML=levelProgressMarkup();
+}
+
 function renderTopbar() {
   return `
     <header class="topbar">
@@ -240,7 +263,11 @@ function render() {
   else if (state.tab === "review") content = renderReviewPage();
   else content = renderProgressPage();
 
-  root.innerHTML = (isActivityScreen() ? "" : renderTopbar()) + content;
+  const showLevel=state.screen==="home" && state.tab==="learn";
+  const header=isActivityScreen() ? "" : showLevel
+    ? `<div class="learning-header">${renderTopbar()}<div id="levelProgressSlot">${levelProgressMarkup()}</div></div>`
+    : renderTopbar();
+  root.innerHTML = header + content;
   layoutActivity();
   bind();
 }
@@ -1597,4 +1624,8 @@ async function init() {
     navigator.serviceWorker.register("./sw.js").catch(error => console.warn("Service worker unavailable", error));
   }
 }
+// Refresh memory colour after a long pause or a date change, without resetting a lesson.
+window.addEventListener("focus",refreshLevelProgress);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshLevelProgress();});
+setInterval(refreshLevelProgress,60000);
 init();
