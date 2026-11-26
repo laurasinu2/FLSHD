@@ -79,8 +79,11 @@ const specs = [
   ["act-48","Objetos y nombres generales · Parte 2","📦",14]
 ];
 
+export const CURRENT_LEVEL = "A1";
+
 export const THEMES = specs.map(([id,name,icon,count], index) => ({
   id,
+  level: "A1",
   name,
   base: name.replace(/ · Parte \d+$/,""),
   icon,
