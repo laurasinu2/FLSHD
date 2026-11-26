@@ -1535,21 +1535,23 @@ function renderAccount(){
   return `
     <section class="page-head"><button class="back-btn" id="backHome" aria-label="Volver">←</button><div><h1>Mi cuenta</h1><p>Tu alemán, en tus dispositivos</p></div></section>
     <section class="review-card account-card">
-      <h2>${user ? escapeHTML(user.email || "Mi cuenta") : "Inicia sesión"}</h2>
+      <h2>${user ? "Sesión iniciada" : "Inicia sesión"}</h2>
       <p id="cloudStatus" class="muted small">${escapeHTML(cloudStatusText())}</p>
       <p id="cloudError" class="account-error" role="status">${escapeHTML(state.cloudError)}</p>
       ${!cloudConfigured ? '<p>El acceso con cuenta se activará cuando esté configurado el proyecto Supabase. Puedes seguir estudiando en modo local.</p>' : !cloudReady() ? '<button class="btn secondary" id="retryCloud">Reintentar conexión</button>' : user ? `
+        <button type="button" class="btn secondary" id="showAccountEmail" aria-expanded="false">Mostrar mi correo</button>
+        <p id="privateAccountEmail" class="small muted" hidden></p>
         <p>Fotos, palabras, errores, fechas de repaso y pruebas superadas pertenecen a esta cuenta.</p>
         <div class="account-actions">
           <button class="btn primary" id="syncAccount">Sincronizar ahora</button>
           <button class="btn secondary" id="importGuest">Importar mis datos anteriores</button>
           <button class="btn secondary" id="signOut">Cerrar sesión</button>
         </div>
-        <p class="small muted">Cerrar sesión no borra tus datos. Si hay cambios pendientes, primero debes sincronizarlos.</p>
+        <p class="small muted">Cerrar sesión no borra tus datos. Si hay cambios pendientes, podrás conservarlos localmente para sincronizarlos más tarde.</p>
       ` : `
-        <form id="authForm" class="account-form">
-          <label>Correo electrónico<input name="email" type="email" autocomplete="email" required></label>
-          <label>Contraseña<input name="password" type="password" autocomplete="current-password" minlength="6" required></label>
+        <form id="authForm" class="account-form" autocomplete="off">
+          <label>Correo electrónico<input name="email" type="email" autocomplete="off" autocapitalize="none" spellcheck="false" required></label>
+          <label>Contraseña<input name="password" type="password" autocomplete="off" minlength="6" required></label>
           <button type="submit" class="btn primary">Iniciar sesión</button>
           <button type="button" id="signUp" class="btn secondary">Crear cuenta</button>
         </form>
@@ -1567,6 +1569,14 @@ async function loadLocalState(){
 function bindAccount(){
   const form=document.querySelector("#authForm");
   const message=document.querySelector("#accountMessage");
+  document.querySelector("#showAccountEmail")?.addEventListener("click",event=>{
+    const email=document.querySelector("#privateAccountEmail");
+    if(!state.account || !email)return;
+    email.hidden=!email.hidden;
+    email.textContent=email.hidden?"":(state.account.email||"");
+    event.currentTarget.textContent=email.hidden?"Mostrar mi correo":"Ocultar mi correo";
+    event.currentTarget.setAttribute("aria-expanded",String(!email.hidden));
+  });
   async function run(fn){
     if(state.accountBusy)return;
     state.accountBusy=true;
