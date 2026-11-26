@@ -1,4 +1,4 @@
-const CACHE = "flshd-v12";
+const CACHE = "flshd-v13";
 const ASSETS = [
   "./",
   "./index.html",
@@ -8,6 +8,7 @@ const ASSETS = [
   "./src/cloud.js",
   "./src/supabase-config.js",
   "./src/data.js",
+  "./src/visual.js",
   "./src/db.js",
   "./src/srs.js",
   "./src/vocab/block-01a.js",
