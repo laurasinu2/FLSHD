@@ -111,3 +111,49 @@ export function buildReviewQueue(words, progressMap, now = dateOnly()) {
       return bScore - aScore;
     });
 }
+
+
+// A heuristic memory estimate, not a measured probability of recall.
+// The next scheduled review marks the end of the "fresh" period.
+// UTC day arithmetic avoids daylight-saving changes in date-only values.
+function memoryDays(later, earlier) {
+  const a=Date.parse(later), b=Date.parse(earlier);
+  return Number.isFinite(a) && Number.isFinite(b) ? Math.max(0,(a-b)/DAY_MS) : 0;
+}
+
+export function estimateRecall(progress, now=dateOnly()) {
+  if (!progress?.mastered) return 0;
+  const success=progress.lastSuccessAt || progress.learnedAt;
+  if (!success || !Number.isFinite(Date.parse(success))) return .25;
+  const scheduled=memoryDays(progress.nextReviewAt, success);
+  const step=Math.max(0,Math.min(REVIEW_INTERVALS_DAYS.length-1,progress.reviewStep || 0));
+  const interval=scheduled || REVIEW_INTERVALS_DAYS[step];
+  const elapsed=memoryDays(now,success);
+  const estimate=Math.pow(.75,elapsed/Math.max(1,interval));
+  // An actual failure is stronger evidence than elapsed time alone.
+  if (progress.known===false) return Math.min(.25,estimate);
+  return Math.max(0,Math.min(1,estimate));
+}
+
+export function summarizeLevel(themes,words,progressMap,level,now=dateOnly()) {
+  const levelThemes=themes.filter(theme=>theme.level===level);
+  const grouped=new Map(levelThemes.map(theme=>[theme.id,[]]));
+  for(const word of words) {
+    if(grouped.has(word.themeId)) grouped.get(word.themeId).push(word);
+  }
+  let completed=0, learned=0, recallSum=0;
+  for(const group of grouped.values()) {
+    if(group.length && group.every(word=>progressMap.get(word.id)?.mastered)) completed++;
+    for(const word of group) {
+      const progress=progressMap.get(word.id);
+      if(!progress?.mastered) continue;
+      learned++;
+      recallSum+=estimateRecall(progress,now);
+    }
+  }
+  const total=levelThemes.length;
+  const percent=total ? Math.floor(completed*100/total) : 0;
+  const recall=learned ? recallSum/learned : null;
+  const tone=recall===null ? "empty" : recall>=.75 ? "fresh" : recall>=.40 ? "aging" : "urgent";
+  return {level,total,completed,percent,learned,recall,tone};
+}
